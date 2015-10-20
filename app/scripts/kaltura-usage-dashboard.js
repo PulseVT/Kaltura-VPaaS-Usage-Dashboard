@@ -3,8 +3,6 @@
   module = angular.module('KalturaUsageDashboard.config', []);
   return module.config(function($urlRouterProvider, $locationProvider, $httpProvider, RestangularProvider) {
     var kmc;
-    $locationProvider.html5Mode(true);
-    $locationProvider.hashPrefix('!');
     kmc = {
       vars: {
         service_url: 'http://www.kaltura.com'

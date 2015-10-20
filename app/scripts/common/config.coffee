@@ -5,8 +5,8 @@ do ->
 
 	module.config ($urlRouterProvider, $locationProvider, $httpProvider, RestangularProvider) ->
 		
-		$locationProvider.html5Mode yes
-		$locationProvider.hashPrefix '!'
+		# $locationProvider.html5Mode yes
+		# $locationProvider.hashPrefix '!'
 
 		# $httpProvider.defaults.useXDomain = yes
 		# $httpProvider.interceptors.push 'authHttpResponseInterceptor'
