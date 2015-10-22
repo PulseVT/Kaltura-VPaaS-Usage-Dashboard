@@ -251,14 +251,61 @@ var Collection,
   	 * @param {object} rest
   	 * Restangular instance
   	 * @param {object} config
-  	 * Configuration for collection
+  	 * <p>Configuration for collection.</p>
+  	 * <p>Please see {@link ng-bundle-collection.Collection.config ng-bundle-collection.Collection.config} for available config properties.</p>
   	 * @example
+  	 * <p>Creating collection:</p>
   	<pre>
   		var collection = new Collection(Restangular.all('users'), {
   			withCaching: true,
   			id_field: 'id',
-  			respondWithPayload: true
+  			respondWithPayload: true,
+  			dontCollect: false,
+  			model: SomeModelClass,
+  			params: {
+  				some_parameter: 'some value'
+  			}
   		});
+  	</pre>
+  	 * <p>Collection can be wrapped with a service and be used as a single source of truth in your application:</p>
+  	<pre>
+  		var module = angular.module('App', []);
+  
+  		module.service('users', function(Collection, Restangular){
+  			return new Collection(Restangular.all('users'), {
+  				//... config
+  			});
+  		});
+  	</pre>
+  	 * <p>You also can use ng-bundle-collection as a **local** collection (without work with backend) of any items to leverage the local api</p>
+  	<pre>
+  		//For example, items collection for some select
+  		var selectItems = new Collection;
+  		selectItems.add([
+  			{id: 23, name: 'Option 1', color: 'red'},
+  			{id: 24, name: 'Option 2', color: 'red', default: true},
+  			{id: 25, name: 'Option 3', color: 'black'},
+  		);
+  
+  		//...
+  
+  		console.log(selectItems.at(1));
+  		//{id: 24, name: 'Option 2', color: 'red', default: true}
+  
+  		console.log(selectItems.by(24));
+  		//{id: 24, name: 'Option 2', color: 'red', default: true}
+  
+  		console.log(selectItems.where({color: 'red'}));
+  		//[{id: 23, name: 'Option 1', color: 'red'}, {id: 24, name: 'Option 2', color: 'red', default: true}]
+  
+  		console.log(selectItems.singleWhere({default: true}));
+  		//{id: 24, name: 'Option 2', color: 'red', default: true}
+  
+  		console.log(selectItems.arr);
+  		//array of collection items
+  
+  		console.log(selectItems.objById);
+  		//object with collection items with keys as items ids
   	</pre>
    */
   return module.factory('Collection', function($q, $timeout) {
@@ -297,6 +344,12 @@ Collection = (function() {
     this.invalidate = bind(this.invalidate, this);
     this.cancelAllRequests = bind(this.cancelAllRequests, this);
     this.fetch = bind(this.fetch, this);
+    this.singleWhere = bind(this.singleWhere, this);
+    this.where = bind(this.where, this);
+    this.by = bind(this.by, this);
+    this.at = bind(this.at, this);
+    this.addFetchInterceptor = bind(this.addFetchInterceptor, this);
+    this.addInterceptor = bind(this.addInterceptor, this);
     this.extendFetch = bind(this.extendFetch, this);
     this.extendAdd = bind(this.extendAdd, this);
     this.extendRemove = bind(this.extendRemove, this);
@@ -312,11 +365,15 @@ Collection = (function() {
     this.isLoading = bind(this.isLoading, this);
     this.dec = bind(this.dec, this);
     this.inc = bind(this.inc, this);
+    this._initInterceptors = bind(this._initInterceptors, this);
+    this._initExtendFns = bind(this._initExtendFns, this);
     this._initPublicProperties = bind(this._initPublicProperties, this);
     this._initConfig = bind(this._initConfig, this);
     Collection.instances.push(this);
     this._initConfig();
     this._initPublicProperties();
+    this._initExtendFns();
+    this._initInterceptors();
     if (this.config.withCaching) {
       this.__initCaching();
     } else {
@@ -357,11 +414,14 @@ Collection = (function() {
   	 * @property {boolean} respondWithPayload=true
   	 * Controls whether to add payload of each request as a **`__payload`** field in response
   	 * @property {class} model
-  	 * Decorator model class for collection items
+  	 * <p>Decorator model class for collection items</p>
+  	 * <p>*Note:* this has to be a function as javascript classes can be defined only as functions. Of course, the CoffeeScript classes are welcome :)</p>
   	 * @property {boolean} dontCollect=false
   	 * <p>If set to `true`, the collection wouldnt collect the responses in its `arr` and `objById` containers.</p>
   	 * <p>This wouldnt affect caching ability, the cache will work as usual.</p>
   	 * <p>This can be used to use collection only as fetching agent, which is useful i.e. when the data is not a collection, but the object, maybe some settings object or else.</p>
+  	 * @property {object} params
+  	 * Default params to be included into each get request made by {@link ng-bundle-collection.Collection ng-bundle-collection.Collection}`.fetch`
    */
 
   Collection.prototype._initConfig = function() {
@@ -417,6 +477,7 @@ Collection = (function() {
   		collection.add(item);
   		(collection.objId[item[collection.config.id_field]] === item) === true;
   	</pre>
+  	 * *Note:* more handy and convenient way to take an item from `objById` storage is {@link ng-bundle-collection.Collection#by collection.by} method
    */
 
 
@@ -437,6 +498,24 @@ Collection = (function() {
   	 * Number, flag which indicates the number of current pending requests through collection
    */
 
+  Collection.prototype._initPublicProperties = function() {
+    return _.extend(this, {
+      cache: {},
+      objById: {},
+      arr: [],
+      loading: 0
+    });
+  };
+
+
+  /**
+  	 * @ngdoc
+  	 * @name Private_methods#_initExtendFns
+  	 * @methodOf Private_methods
+  	 * @description
+  	 * Initialization of extending functions
+   */
+
 
   /**
   	 * @ngdoc object
@@ -446,12 +525,8 @@ Collection = (function() {
   	 * Object, storage of functions which extend collection actions
    */
 
-  Collection.prototype._initPublicProperties = function() {
+  Collection.prototype._initExtendFns = function() {
     return _.extend(this, {
-      cache: {},
-      objById: {},
-      arr: [],
-      loading: 0,
       extendFns: {
         add: {
           b: [],
@@ -465,6 +540,37 @@ Collection = (function() {
           e: [],
           f: []
         }
+      }
+    });
+  };
+
+
+  /**
+  	 * @ngdoc
+  	 * @name Private_methods#_initInterceptors
+  	 * @methodOf Private_methods
+  	 * @description
+  	 * Initialization of interceptors
+   */
+
+
+  /**
+  	 * @ngdoc object
+  	 * @name ng-bundle-collection.Collection#interceptors
+  	 * @propertyOf ng-bundle-collection.Collection
+  	 * @description
+  	 * <p>Object, storage of functions which can decorate response.</p>
+  	 * <p>The interceptors are called as a chain in the order in which they were added.</p>
+  	 * <p>Interceptors accept response as parameter and the ongoing response is replaced by the value returned from interceptor.</p>
+  	 * <p>**Important**: so, the difference between {@link ng-bundle-collection.Collection collection}`.extendFns`
+  	 * and {@link ng-bundle-collection.Collection collection}`.interceptors` is that interceptors can not only decorate the response
+  	 * with some properties or implement some extending functionality, but they can replace the response with anything.</p>
+   */
+
+  Collection.prototype._initInterceptors = function() {
+    return _.extend(this, {
+      interceptors: {
+        fetch: []
       }
     });
   };
@@ -868,6 +974,10 @@ Collection = (function() {
   	 * @name ng-bundle-collection.Collection#clear
   	 * @methodOf ng-bundle-collection.Collection
   	 * @this {object} {@link ng-bundle-collection.Collection collection} instance
+  	 * @params {object} settings
+  	 * Settings of clearing (object with boolean flags):
+  	 * - withExtendFns=false - whether to remove all configured extending functions ({@link ng-bundle-collection.Collection collection}`.extendFns`)
+  	 * - withInterceptors=false - whether to remove all {@link ng-bundle-collection.Collection collection}`.interceptors`
   	 * @returns {object}
   	 * this, {@link ng-bundle-collection.Collection collection} instance
   	 * @description
@@ -892,10 +1002,13 @@ Collection = (function() {
   	</pre>
    */
 
-  Collection.prototype.clear = function(withExtendFns) {
+  Collection.prototype.clear = function(settings) {
     var item, j, len, ref;
-    if (withExtendFns) {
+    if (settings.withExtendFns) {
       this._initExtendFns();
+    }
+    if (settings.withInterceptors) {
+      this._initInterceptors();
     }
     ref = angular.copy(this.arr);
     for (j = 0, len = ref.length; j < len; j++) {
@@ -1029,6 +1142,71 @@ Collection = (function() {
 
   /**
   	 * @ngdoc
+  	 * @name ng-bundle-collection.Collection#addInterceptor
+  	 * @methodOf ng-bundle-collection.Collection
+  	 * @description
+  	 * Adds function to {@link ng-bundle-collection.Collection#interceptors ng-bundle-collection.Collection#interceptors} structure
+  	 * @param {object} fns
+  	 * Object, keys can be:
+  	 * - `'fetch'` - interceptors will be executed on fetching success
+  	 * Values are interceptors
+  	 * @example
+  	<pre>
+  		collection.addInterceptor({
+  			fetch: function(successResponse){
+  				...
+  				return modified_or_replaced_response;
+  			}
+  		});
+  	</pre>
+   */
+
+  Collection.prototype.addInterceptor = function(fns) {
+    var e, k, results1, v;
+    results1 = [];
+    for (k in fns) {
+      v = fns[k];
+      try {
+        if (!_.isArray(this.interceptors[k])) {
+          throw "Wrong interceptor type: " + k + ".";
+        } else {
+          results1.push(this.interceptors[k].push(v));
+        }
+      } catch (_error) {
+        e = _error;
+        results1.push(console.error(e));
+      }
+    }
+    return results1;
+  };
+
+
+  /**
+  	 * @ngdoc
+  	 * @name ng-bundle-collection.Collection#addFetchInterceptor
+  	 * @methodOf ng-bundle-collection.Collection
+  	 * @description
+  	 * Adds function to {@link ng-bundle-collection.Collection#interceptors ng-bundle-collection.Collection#interceptors}`.fetch` chain
+  	 * @param {function} fn
+  	 * Function which will be added to fetch interceptors chain.
+  	 * @example
+  	<pre>
+  		collection.addFetchInterceptor(function(successResponse){
+  			...
+  			return modified_or_replaced_response;
+  		});
+  	</pre>
+   */
+
+  Collection.prototype.addFetchInterceptor = function(fn) {
+    return this.addInterceptor({
+      fetch: fn
+    });
+  };
+
+
+  /**
+  	 * @ngdoc
   	 * @name ng-bundle-collection.Collection#at
   	 * @methodOf ng-bundle-collection.Collection
   	 * @description
@@ -1077,6 +1255,51 @@ Collection = (function() {
 
   /**
   	 * @ngdoc
+  	 * @name ng-bundle-collection.Collection#where
+  	 * @methodOf ng-bundle-collection.Collection
+  	 * @description
+  	 * <p>Searches in collection for the items which have particular fields with particular values</p>
+  	 * <p>Uses {@link https://lodash.com/ lodash} method `where`
+  	 * @returns {array}
+  	 * Array of items which contain all the fields with specified values
+  	 * @param {object} obj
+  	 * Object with fields which items should match to be found
+  	 * @example
+  	<pre>
+  		collection.where({level: 25, first_name: 'Andrew'});
+  	</pre>
+   */
+
+  Collection.prototype.where = function(obj) {
+    return _.where(this.arr, obj);
+  };
+
+
+  /**
+  	 * @ngdoc
+  	 * @name ng-bundle-collection.Collection#singleWhere
+  	 * @methodOf ng-bundle-collection.Collection
+  	 * @description
+  	 * <p>Searches in collection for the single item which has particular fields with particular values</p>
+  	 * <p>Uses {@link https://lodash.com/ lodash} method `findWhere`
+  	 * @returns {object}
+  	 * <p>Item which contains all the fields with specified values.</p>
+  	 * <p>*Note:* If there is multiple items that match, the first occurence in {@link ng-bundle-collection.Collection collection}`.arr` will be returned</p>
+  	 * @param {object} obj
+  	 * Object with fields which the item should match to be found
+  	 * @example
+  	<pre>
+  		collection.singleWhere({level: 25, first_name: 'Andrew'});
+  	</pre>
+   */
+
+  Collection.prototype.singleWhere = function(obj) {
+    return _.findWhere(this.arr, obj);
+  };
+
+
+  /**
+  	 * @ngdoc
   	 * @name ng-bundle-collection.Collection#fetch
   	 * @methodOf ng-bundle-collection.Collection
   	 * @description
@@ -1109,6 +1332,7 @@ Collection = (function() {
     if (params == null) {
       params = {};
     }
+    _.extend(params, this.config.params);
     id = params[this.config.id_field];
     if (this.objById[id] != null) {
       return this.$q.when(this.objById[id]);
@@ -1232,6 +1456,9 @@ Collection = (function() {
   	 * @description
   	 * Invokes each extending function from array with passed params.
   	 * Extending functions array is taken from {@link ng-bundle-collection.Collection Collection}.extendFns
+  	 * @param {array} fns_arr
+  	 * Array of functions to be called
+  	 * @params Other parameters
    */
 
   Collection.prototype.__callExtendFns = function(fns_arr, p1, p2, p3, p4, p5) {
@@ -1253,6 +1480,38 @@ Collection = (function() {
       }
     }
     return results1;
+  };
+
+
+  /**
+  	 * @ngdoc
+  	 * @name Private_methods#__callInterceptors
+  	 * @methodOf Private_methods
+  	 * @returns {object|array}
+  	 * Value which is returned from the last interceptor in chain
+  	 * @description
+  	 * Invokes each interceptor from array (chain) with passed params.
+  	 * Extending functions array is taken from {@link ng-bundle-collection.Collection Collection}.extendFns
+  	 * @param {array} fns_arr
+  	 * Array of functions to be called
+  	 * @param {object|array} response
+  	 * Response which has to be
+   */
+
+  Collection.prototype.__callInterceptors = function(fns_arr, response) {
+    var e, fn, j, len;
+    for (j = 0, len = fns_arr.length; j < len; j++) {
+      fn = fns_arr[j];
+      try {
+        if ((response = fn(response)) == null) {
+          throw "Interceptor returned wrong response: " + response;
+        }
+      } catch (_error) {
+        e = _error;
+        console.error(e);
+      }
+    }
+    return response;
   };
 
 
@@ -1380,6 +1639,7 @@ Collection = (function() {
 
   Collection.prototype.__success = function(response, params) {
     var response_formatted;
+    response = this.__callInterceptors(this.interceptors.fetch, response);
     if (!this.config.dontCollect) {
       if ((response != null ? response.results : void 0) != null) {
         this.add(response.results);
@@ -1505,7 +1765,7 @@ Collection = (function() {
               });
             }
           } else {
-            return this.objById[response[this.config.id_field]];
+            return this.objById[response[this.config.id_field]] || response;
           }
         }
       }
@@ -1682,17 +1942,19 @@ Collection = (function() {
   	 * @methodOf Static_methods
   	 * @description
   	 * Clears all instances (clears `arr` and `objById`) of {@link ng-bundle-collection.Collection ng-bundle-collection.Collection} by calling `clear` methods
-  	 * @param {boolean} withExtendFns
-  	 * Whether to remove all extending functions.
+  	 * @param {object} settings
+  	 * Settings of clearing (object with boolean flags):
+  	 * - withExtendFns=false - whether to remove all configured extending functions ({@link ng-bundle-collection.Collection collection}`.extendFns`)
+  	 * - withInterceptors=false - whether to remove all {@link ng-bundle-collection.Collection collection}`.interceptors`
    */
 
-  Collection.clear = function(withExtendFns) {
+  Collection.clear = function(settings) {
     var i, j, len, ref, results1;
     ref = this.instances;
     results1 = [];
     for (j = 0, len = ref.length; j < len; j++) {
       i = ref[j];
-      results1.push(i.clear(withExtendFns));
+      results1.push(i.clear(settings));
     }
     return results1;
   };

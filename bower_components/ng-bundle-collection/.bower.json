@@ -1,6 +1,6 @@
 {
   "name": "ng-bundle-collection",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "authors": [
     "Vitaliy Tarash <vitaliy.tarash@gmail.com>"
   ],
@@ -22,14 +22,13 @@
     "test",
     "tests"
   ],
-  "_release": "1.0.0",
+  "_release": "1.0.3",
   "_resolution": {
     "type": "version",
-    "tag": "1.0.0",
-    "commit": "64a5d350c7abd7dc7835e31c5abd3f198ac45509"
+    "tag": "1.0.3",
+    "commit": "32196354d02764b3b365543d4bf8fbabf247394a"
   },
   "_source": "git://github.com/PulseVT/ng-bundle-collection.git",
-  "_target": "~1.0.0",
-  "_originalSource": "ng-bundle-collection",
-  "_direct": true
+  "_target": "~1.0.3",
+  "_originalSource": "ng-bundle-collection"
 }

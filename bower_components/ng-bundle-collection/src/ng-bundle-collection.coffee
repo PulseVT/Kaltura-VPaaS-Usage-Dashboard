@@ -17,14 +17,61 @@ do ->
 	# @param {object} rest
 	# Restangular instance
 	# @param {object} config
-	# Configuration for collection
+	# <p>Configuration for collection.</p>
+	# <p>Please see {@link ng-bundle-collection.Collection.config ng-bundle-collection.Collection.config} for available config properties.</p>
 	# @example
+	# <p>Creating collection:</p>
 	<pre>
 		var collection = new Collection(Restangular.all('users'), {
 			withCaching: true,
 			id_field: 'id',
-			respondWithPayload: true
+			respondWithPayload: true,
+			dontCollect: false,
+			model: SomeModelClass,
+			params: {
+				some_parameter: 'some value'
+			}
 		});
+	</pre>
+	# <p>Collection can be wrapped with a service and be used as a single source of truth in your application:</p>
+	<pre>
+		var module = angular.module('App', []);
+
+		module.service('users', function(Collection, Restangular){
+			return new Collection(Restangular.all('users'), {
+				//... config
+			});
+		});
+	</pre>
+	# <p>You also can use ng-bundle-collection as a **local** collection (without work with backend) of any items to leverage the local api</p>
+	<pre>
+		//For example, items collection for some select
+		var selectItems = new Collection;
+		selectItems.add([
+			{id: 23, name: 'Option 1', color: 'red'},
+			{id: 24, name: 'Option 2', color: 'red', default: true},
+			{id: 25, name: 'Option 3', color: 'black'},
+		);
+
+		//...
+
+		console.log(selectItems.at(1));
+		//{id: 24, name: 'Option 2', color: 'red', default: true}
+
+		console.log(selectItems.by(24));
+		//{id: 24, name: 'Option 2', color: 'red', default: true}
+
+		console.log(selectItems.where({color: 'red'}));
+		//[{id: 23, name: 'Option 1', color: 'red'}, {id: 24, name: 'Option 2', color: 'red', default: true}]
+
+		console.log(selectItems.singleWhere({default: true}));
+		//{id: 24, name: 'Option 2', color: 'red', default: true}
+
+		console.log(selectItems.arr);
+		//array of collection items
+
+		console.log(selectItems.objById);
+		//object with collection items with keys as items ids
 	</pre>
 	###
 	module.factory 'Collection', ($q, $timeout) ->
@@ -43,6 +90,8 @@ class Collection
 
 		@_initConfig()
 		@_initPublicProperties()
+		@_initExtendFns()
+		@_initInterceptors()
 
 		if @config.withCaching then @__initCaching() else @__initCacheClearing()
 
@@ -74,11 +123,14 @@ class Collection
 	# @property {boolean} respondWithPayload=true
 	# Controls whether to add payload of each request as a **`__payload`** field in response
 	# @property {class} model
-	# Decorator model class for collection items
+	# <p>Decorator model class for collection items</p>
+	# <p>*Note:* this has to be a function as javascript classes can be defined only as functions. Of course, the CoffeeScript classes are welcome :)</p>
 	# @property {boolean} dontCollect=false
 	# <p>If set to `true`, the collection wouldnt collect the responses in its `arr` and `objById` containers.</p>
 	# <p>This wouldnt affect caching ability, the cache will work as usual.</p>
 	# <p>This can be used to use collection only as fetching agent, which is useful i.e. when the data is not a collection, but the object, maybe some settings object or else.</p>
+	# @property {object} params
+	# Default params to be included into each get request made by {@link ng-bundle-collection.Collection ng-bundle-collection.Collection}`.fetch`
 	###
 	_initConfig: =>
 		@config.withCaching = yes unless @config.withCaching?
@@ -118,6 +170,7 @@ class Collection
 		collection.add(item);
 		(collection.objId[item[collection.config.id_field]] === item) === true;
 	</pre>
+	# *Note:* more handy and convenient way to take an item from `objById` storage is {@link ng-bundle-collection.Collection#by collection.by} method
 	###
 	###*
 	# @ngdoc
@@ -133,6 +186,20 @@ class Collection
 	# @description
 	# Number, flag which indicates the number of current pending requests through collection
 	###
+	_initPublicProperties: =>
+		_.extend @,
+			cache: {}
+			objById: {}
+			arr: []
+			loading: 0
+
+	###*
+	# @ngdoc
+	# @name Private_methods#_initExtendFns
+	# @methodOf Private_methods
+	# @description
+	# Initialization of extending functions
+	###
 	###*
 	# @ngdoc object
 	# @name ng-bundle-collection.Collection#extendFns
@@ -140,12 +207,8 @@ class Collection
 	# @description
 	# Object, storage of functions which extend collection actions
 	###
-	_initPublicProperties: =>
+	_initExtendFns: =>
 		_.extend @,
-			cache: {}
-			objById: {}
-			arr: []
-			loading: 0
 			extendFns:
 				add:
 					b: [] #before add item
@@ -157,6 +220,30 @@ class Collection
 					s: [] #on successful fetch
 					e: [] #on error fetch
 					f: [] #on finish (either success or error)
+
+	###*
+	# @ngdoc
+	# @name Private_methods#_initInterceptors
+	# @methodOf Private_methods
+	# @description
+	# Initialization of interceptors
+	###
+	###*
+	# @ngdoc object
+	# @name ng-bundle-collection.Collection#interceptors
+	# @propertyOf ng-bundle-collection.Collection
+	# @description
+	# <p>Object, storage of functions which can decorate response.</p>
+	# <p>The interceptors are called as a chain in the order in which they were added.</p>
+	# <p>Interceptors accept response as parameter and the ongoing response is replaced by the value returned from interceptor.</p>
+	# <p>**Important**: so, the difference between {@link ng-bundle-collection.Collection collection}`.extendFns`
+	# and {@link ng-bundle-collection.Collection collection}`.interceptors` is that interceptors can not only decorate the response
+	# with some properties or implement some extending functionality, but they can replace the response with anything.</p>
+	###
+	_initInterceptors: =>
+		_.extend @,
+			interceptors:
+				fetch: []
 
 	###*
 	# @ngdoc
@@ -461,6 +548,10 @@ class Collection
 	# @name ng-bundle-collection.Collection#clear
 	# @methodOf ng-bundle-collection.Collection
 	# @this {object} {@link ng-bundle-collection.Collection collection} instance
+	# @params {object} settings
+	# Settings of clearing (object with boolean flags):
+	# - withExtendFns=false - whether to remove all configured extending functions ({@link ng-bundle-collection.Collection collection}`.extendFns`)
+	# - withInterceptors=false - whether to remove all {@link ng-bundle-collection.Collection collection}`.interceptors`
 	# @returns {object}
 	# this, {@link ng-bundle-collection.Collection collection} instance
 	# @description
@@ -484,8 +575,9 @@ class Collection
 		});
 	</pre>
 	###
-	clear: (withExtendFns) =>
-		@_initExtendFns() if withExtendFns
+	clear: (settings) =>
+		@_initExtendFns() if settings.withExtendFns
+		@_initInterceptors() if settings.withInterceptors
 		@remove item for item in angular.copy @arr
 		@obj = {}
 		@
@@ -588,6 +680,56 @@ class Collection
 
 	###*
 	# @ngdoc
+	# @name ng-bundle-collection.Collection#addInterceptor
+	# @methodOf ng-bundle-collection.Collection
+	# @description
+	# Adds function to {@link ng-bundle-collection.Collection#interceptors ng-bundle-collection.Collection#interceptors} structure
+	# @param {object} fns
+	# Object, keys can be:
+	# - `'fetch'` - interceptors will be executed on fetching success
+	# Values are interceptors
+	# @example
+	<pre>
+		collection.addInterceptor({
+			fetch: function(successResponse){
+				...
+				return modified_or_replaced_response;
+			}
+		});
+	</pre>
+	###
+	addInterceptor: (fns) =>
+		for k, v of fns
+			try
+				unless _.isArray @interceptors[k]
+					throw "Wrong interceptor type: #{k}."
+				else
+					@interceptors[k].push v
+			catch e
+				console.error e
+
+	###*
+	# @ngdoc
+	# @name ng-bundle-collection.Collection#addFetchInterceptor
+	# @methodOf ng-bundle-collection.Collection
+	# @description
+	# Adds function to {@link ng-bundle-collection.Collection#interceptors ng-bundle-collection.Collection#interceptors}`.fetch` chain
+	# @param {function} fn
+	# Function which will be added to fetch interceptors chain.
+	# @example
+	<pre>
+		collection.addFetchInterceptor(function(successResponse){
+			...
+			return modified_or_replaced_response;
+		});
+	</pre>
+	###
+	addFetchInterceptor: (fn) =>
+		@addInterceptor
+			fetch: fn
+
+	###*
+	# @ngdoc
 	# @name ng-bundle-collection.Collection#at
 	# @methodOf ng-bundle-collection.Collection
 	# @description
@@ -603,7 +745,7 @@ class Collection
 		var item = collection.at(0);
 	</pre>
 	###
-	at: (index) -> @arr[index]
+	at: (index) => @arr[index]
 
 	###*
 	# @ngdoc
@@ -624,7 +766,47 @@ class Collection
 		var user = users.by(0);
 	</pre>
 	###
-	by: (id) -> @objById[id]
+	by: (id) => @objById[id]
+
+	###*
+	# @ngdoc
+	# @name ng-bundle-collection.Collection#where
+	# @methodOf ng-bundle-collection.Collection
+	# @description
+	# <p>Searches in collection for the items which have particular fields with particular values</p>
+	# <p>Uses {@link https://lodash.com/ lodash} method `where`
+	# @returns {array}
+	# Array of items which contain all the fields with specified values
+	# @param {object} obj
+	# Object with fields which items should match to be found
+	# @example
+	<pre>
+		collection.where({level: 25, first_name: 'Andrew'});
+	</pre>
+	###
+	where: (obj) =>
+		_.where @arr, obj
+
+	###*
+	# @ngdoc
+	# @name ng-bundle-collection.Collection#singleWhere
+	# @methodOf ng-bundle-collection.Collection
+	# @description
+	# <p>Searches in collection for the single item which has particular fields with particular values</p>
+	# <p>Uses {@link https://lodash.com/ lodash} method `findWhere`
+	# @returns {object}
+	# <p>Item which contains all the fields with specified values.</p>
+	# <p>*Note:* If there is multiple items that match, the first occurence in {@link ng-bundle-collection.Collection collection}`.arr` will be returned</p>
+	# @param {object} obj
+	# Object with fields which the item should match to be found
+	# @example
+	<pre>
+		collection.singleWhere({level: 25, first_name: 'Andrew'});
+	</pre>
+	###
+	singleWhere: (obj) =>
+		_.findWhere @arr, obj
+
 
 	###*
 	# @ngdoc
@@ -655,6 +837,10 @@ class Collection
 	</pre>
 	###
 	fetch: (params = {}) =>
+		# extending params with default preconfigured params
+		_.extend params, @config.params
+
+		# getting id-field (can be undefined)
 		id = params[@config.id_field]
 
 		if @objById[id]?
@@ -743,6 +929,9 @@ class Collection
 	# @description
 	# Invokes each extending function from array with passed params.
 	# Extending functions array is taken from {@link ng-bundle-collection.Collection Collection}.extendFns
+	# @param {array} fns_arr
+	# Array of functions to be called
+	# @params Other parameters
 	###
 	__callExtendFns: (fns_arr, p1, p2, p3, p4, p5) ->
 		return unless fns_arr and _.isArray fns_arr
@@ -751,6 +940,30 @@ class Collection
 			fn = fns_arr[index]
 			fn? p1, p2, p3, p4, p5
 			index++ unless fn?.once
+
+	###*
+	# @ngdoc
+	# @name Private_methods#__callInterceptors
+	# @methodOf Private_methods
+	# @returns {object|array}
+	# Value which is returned from the last interceptor in chain
+	# @description
+	# Invokes each interceptor from array (chain) with passed params.
+	# Extending functions array is taken from {@link ng-bundle-collection.Collection Collection}.extendFns
+	# @param {array} fns_arr
+	# Array of functions to be called
+	# @param {object|array} response
+	# Response which has to be 
+	###
+	__callInterceptors: (fns_arr, response) ->
+		for fn in fns_arr
+			try
+				unless (response = fn response)?
+					throw "Interceptor returned wrong response: #{response}"
+			catch e
+				console.error e
+		response
+
 
 	###*
 	# @ngdoc
@@ -849,6 +1062,7 @@ class Collection
 	# Params object, with which was the request done.
 	###
 	__success: (response, params) =>
+		response = @__callInterceptors @interceptors.fetch, response
 		unless @config.dontCollect
 			if response?.results?
 				@add response.results
@@ -936,7 +1150,7 @@ class Collection
 						results.push @objById[item[@config.id_field]] for item in response.results
 						_.extend response, results: results
 				else
-					@objById[response[@config.id_field]]
+					@objById[response[@config.id_field]] or response
 
 		response.__payload = params if @config.respondWithPayload
 
@@ -1049,7 +1263,9 @@ class Collection
 	# @methodOf Static_methods
 	# @description
 	# Clears all instances (clears `arr` and `objById`) of {@link ng-bundle-collection.Collection ng-bundle-collection.Collection} by calling `clear` methods
-	# @param {boolean} withExtendFns
-	# Whether to remove all extending functions.
+	# @param {object} settings
+	# Settings of clearing (object with boolean flags):
+	# - withExtendFns=false - whether to remove all configured extending functions ({@link ng-bundle-collection.Collection collection}`.extendFns`)
+	# - withInterceptors=false - whether to remove all {@link ng-bundle-collection.Collection collection}`.interceptors`
 	###
-	@clear: (withExtendFns) -> i.clear withExtendFns for i in @instances
+	@clear: (settings) -> i.clear settings for i in @instances
