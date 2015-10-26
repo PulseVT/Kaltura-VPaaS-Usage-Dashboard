@@ -2,6 +2,12 @@ do ->
 
 	module = angular.module 'KalturaUsageDashboard.constants', []
 
+	module.service 'constants', [
+		'ModuleConsolidator',
+		(ModuleConsolidator) ->
+			new ModuleConsolidator module
+	]
+
 
 	module.constant 'dayms', 1000*60*60*24
 
@@ -9,8 +15,23 @@ do ->
 	module.constant 'graph',
 		colorColumn: '#02a3d1'
 		colorAxis: '#c2d2e1'
+		colorText: '#585858'
 		mainBg: '#f0eeef'
 		borderWidth: 7
+		labelRotation:
+			tiny: 10
+			small: 14
+			medium: 19
+			large: 26
+			full: 32
+		dataDecorators:
+			months: (months) ->
+				for month in months
+					monthDate = new Date month.dates[0]
+					if month.dates.length isnt monthDate.nDaysInMonth() and monthDate.toYMn() in [months.dates.from.toYMn(), months.dates.to.toYMn()]
+						firstDate = monthDate.getDate()
+						lastDate = month.dates[month.dates.length-1].getDate()
+						month.label = "#{firstDate}#{if firstDate isnt lastDate then '-' + lastDate else ''} #{month.label}"
 
 
 	module.constant 'ArrayPrototype',

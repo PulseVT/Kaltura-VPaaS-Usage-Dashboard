@@ -1,6 +1,19 @@
 .border {
   border: 1px solid #d8d7d7;
 }
+.spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 0px;
+  height: 0px;
+}
+.spinner [class*='spinner'] {
+  margin: -15px 0 0 0;
+}
+.spinner [class*='spinner'] > div {
+  background-color: #2b2b2b;
+}
 body {
   font-family: arial, sans-serif;
   background: #f0eeef;
@@ -248,6 +261,9 @@ table.one-third-width {
   font-size: 15px;
   cursor: pointer;
 }
+.title-text .export-to-csv [ng-csv] {
+  display: block;
+}
 .controls-row {
   padding: 0 10px;
   line-height: 24px;
@@ -257,12 +273,19 @@ table.one-third-width {
   display: block;
   float: left;
 }
-.controls-row > *.text {
+.controls-row > *.dates > * {
+  float: left;
+}
+.controls-row > *.dates .text {
   padding-left: 10px;
 }
 .graph-row {
   height: 300px;
+  display: block;
   margin-bottom: 20px !important;
+}
+.graph-row .tickLabel {
+  color: #585858;
 }
 .graph-row .flot-x-axis {
   margin-top: 5px;
@@ -270,8 +293,24 @@ table.one-third-width {
 .graph-row .flot-x-axis .flot-tick-label {
   max-width: 150px !important;
 }
-.graph-row.rotate-x-labels-small {
+.graph-row.rotate-x-labels-tiny {
   height: 320px;
+  margin-bottom: 20px !important;
+}
+.graph-row.rotate-x-labels-tiny .flot-x-axis .flot-tick-label {
+  transform: rotate(-15deg);
+  -ms-transform: rotate(-15deg);
+  /* IE 9 */
+  -moz-transform: rotate(-15deg);
+  /* Firefox */
+  -webkit-transform: rotate(-15deg);
+  /* Safari and Chrome */
+  -o-transform: rotate(-15deg);
+  /* Opera */
+  margin-top: 20px;
+}
+.graph-row.rotate-x-labels-small {
+  height: 325px;
   margin-bottom: 30px !important;
 }
 .graph-row.rotate-x-labels-small .flot-x-axis .flot-tick-label {
@@ -284,11 +323,11 @@ table.one-third-width {
   /* Safari and Chrome */
   -o-transform: rotate(-30deg);
   /* Opera */
-  margin-top: 20px;
+  margin-top: 25px;
 }
 .graph-row.rotate-x-labels-medium {
-  height: 330px;
-  margin-bottom: 30px !important;
+  height: 335px;
+  margin-bottom: 40px !important;
 }
 .graph-row.rotate-x-labels-medium .flot-x-axis .flot-tick-label {
   transform: rotate(-45deg);
@@ -300,24 +339,40 @@ table.one-third-width {
   /* Safari and Chrome */
   -o-transform: rotate(-45deg);
   /* Opera */
-  margin-top: 30px;
+  margin-top: 35px;
 }
 .graph-row.rotate-x-labels-large {
   height: 350px;
   margin-bottom: 50px !important;
-  margin-left: -5px;
 }
 .graph-row.rotate-x-labels-large .flot-x-axis .flot-tick-label {
-  transform: rotate(-80deg);
-  -ms-transform: rotate(-80deg);
+  transform: rotate(-78deg);
+  -ms-transform: rotate(-78deg);
   /* IE 9 */
-  -moz-transform: rotate(-80deg);
+  -moz-transform: rotate(-78deg);
   /* Firefox */
-  -webkit-transform: rotate(-80deg);
+  -webkit-transform: rotate(-78deg);
   /* Safari and Chrome */
-  -o-transform: rotate(-80deg);
+  -o-transform: rotate(-78deg);
   /* Opera */
   margin-top: 50px;
+  margin-left: -7px;
+}
+.graph-row.rotate-x-labels-full {
+  height: 355px;
+  margin-bottom: 60px !important;
+}
+.graph-row.rotate-x-labels-full .flot-x-axis .flot-tick-label {
+  transform: rotate(-89deg);
+  -ms-transform: rotate(-89deg);
+  /* IE 9 */
+  -moz-transform: rotate(-89deg);
+  /* Firefox */
+  -webkit-transform: rotate(-89deg);
+  /* Safari and Chrome */
+  -o-transform: rotate(-89deg);
+  /* Opera */
+  margin-top: 55px;
 }
 .graph-tooltip {
   background: -moz-linear-gradient(top, #ffffff 10%, #d8d7d7 100%) !important;
@@ -337,7 +392,6 @@ table.one-third-width {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#d8d7d7', GradientType=0) !important;
   /* IE6-9 */
   border: 1px solid #d8d7d7 !important;
-  height: 50px !important;
   padding: 4px 8px !important;
   position: relative;
 }
@@ -350,9 +404,9 @@ table.one-third-width {
   font-size: 15px;
   line-height: 15px;
   color: #189fad;
-  position: absolute;
   bottom: 4px;
   left: 8px;
+  margin-top: 10px;
 }
 .info {
   background: url(../images/kmc/kmc_sprite.png) no-repeat -175px -152px;
@@ -517,6 +571,17 @@ table.one-third-width {
 }
 .select2-drop-active {
   border: 1px solid #d8d7d7;
+}
+.overlay-parent {
+  position: relative;
+}
+.overlay-parent .overlay {
+  position: absolute;
+  display: block;
+  top: 0;
+  cursor: default;
+  width: 100%;
+  height: 100%;
 }
 #overall-usage-report .panel-table thead th {
   width: 16.666666666666668%;
