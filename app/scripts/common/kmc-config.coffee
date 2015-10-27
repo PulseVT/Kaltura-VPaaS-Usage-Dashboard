@@ -4,6 +4,12 @@ do ->
 
 	module.provider 'kmc', ->
 		$get: ->
+			ks = 'ZWQ5MWRkNmU3Zjc2YzA5Y2I5ZDVjNTdkNzhkY2E4YjIxY2JmOTkyN3w5MzkzNDE7OTM5MzQxOzE0NDYwNDQwNzI7MjsxNDQ1OTU3NjcyLjU1Njtya3NoYXJlZGJveEBnbWFpbC5jb207ZGlzYWJsZWVudGl0bGVtZW50Ozs='
+			for param in location.search?.split('?')[1]?.split('&') or []
+				parts = param.split '='
+				if parts[0] is 'ks'
+					ks = parts[1]
+					break
 			window.kmc or vars:
 				service_url: 'http://www.kaltura.com'
-				ks: 'YzRlMGFkM2VkYmI4MmUxNGY0ZTQ1ZGNkYmRlYTNmM2FjOGQwZDkwOXw5MzkzNDE7OTM5MzQxOzE0NDU5MzA4MzQ7MjsxNDQ1ODQ0NDM0LjMyMTtya3NoYXJlZGJveEBnbWFpbC5jb207ZGlzYWJsZWVudGl0bGVtZW50Ozs='
+				ks: ks

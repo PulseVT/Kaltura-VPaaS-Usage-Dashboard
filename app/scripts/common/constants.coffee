@@ -34,6 +34,62 @@ do ->
 						month.label = "#{firstDate}#{if firstDate isnt lastDate then '-' + lastDate else ''} #{month.label}"
 
 
+	module.constant 'columns',
+		default: [
+			title: 'Month'
+			field: 'label'
+		]
+		reports:
+			plays: [
+				title: 'Plays (CPM)'
+				field: 'count_plays'
+			]
+			storage: [
+				title: 'Average Storage (GB)'
+				field: 'average_storage'
+			]
+			bandwidth: [
+				title: 'Bandwidth Consumption (GB)'
+				field: 'bandwidth_consumption'
+			]
+			'transcoding-consumption': [
+				title: 'Transcoding Consumption (GB)'
+				field: 'transcoding_consumption'
+			]
+			'media-entries': [
+				title: 'Total'
+				field: 'count_total'
+			,
+				title: 'Video'
+				field: 'count_video'
+			,
+				title: 'Audio'
+				field: 'count_audio'
+			,
+				title: 'Images'
+				field: 'count_image'
+			]
+			'overall-usage': [
+				title: 'Plays (CPM)'
+				field: 'count_plays'
+			,
+				title: 'Average Storage (GB)'
+				field: 'average_storage'
+			,
+				title: 'Transcoding Consumption (GB)'
+				field: 'transcoding_consumption'
+			,
+				title: 'Bandwidth Consumption (GB)'
+				field: 'bandwidth_consumption'
+			,
+				title: 'Media Entries'
+				field: 'count_total'
+			,
+				title: 'End Users'
+				field: 'end_users'
+			]
+
+
 	module.constant 'ArrayPrototype',
 		byField: (field, value) ->
 			for e, index in @
@@ -69,7 +125,6 @@ do ->
 
 
 	module.constant 'StringPrototype',
-
 		noSpaces: -> @replace /\s/g, ''
 
 		splice: (idx, rem, s) -> @slice(0, idx) + s + @slice idx + Math.abs(rem)
@@ -79,6 +134,17 @@ do ->
 			(@match(r) or []).length
 
 		nPoints: -> @nMatches '\\\.'
+
+		contains: (str) -> @indexOf(str) >= 0
+
+	module.constant 'NumberPrototype',
+		isFloat: -> @ % 1 isnt 0
+
+	module.constant 'NumberExtension',
+		round: (n, nDecimalPlaces=0) ->
+			rank = Math.pow 10, nDecimalPlaces
+			Math.round(n * rank) / rank
+
 
 	module.service 'DatePrototype', [
 		'$filter'
@@ -229,4 +295,30 @@ do ->
 			isInPreviousMonth: (date) ->
 				date = new Date date
 				@isInMonth date.setMonth date.getMonth() - 1
+
+			nMonths: -> @getFullYear() * 12 + @getMonth() - 11
 	]
+
+	module.constant 'DateExtension',
+		#from number like 20151023, where 2015 - year, 10 - month, 23 - date
+		fromYMDn: (n) ->
+			new Date Math.floor(n / 10000), Math.floor(n % 10000 / 100 - 1), n % 100
+
+		#from number like 201510, where 2015 - year, 10 - month
+		fromYMn: (n) ->
+			new Date Math.floor(n / 100), n % 100 - 1
+
+		#from number like YMDn or YMn
+		fromn: (n) ->
+			Date[switch "#{n}".length
+				when 6 then 'fromYMn'
+				when 8 then 'fromYMDn'
+			] n
+
+		#string like "2015-10-23"
+		fromYMD: (str) -> new Date str
+
+		#string like "2015-10"
+		fromYM: (str) -> new Date "#{str}-01"
+
+		nMonths: (d1, d2) -> (new Date d2).nMonths() - (new Date d1).nMonths()

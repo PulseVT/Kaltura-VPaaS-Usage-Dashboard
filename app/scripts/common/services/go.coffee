@@ -6,7 +6,7 @@ do ->
 		'$state'
 		($state) ->
 			_.extend @,
-				current: -> $state.current
+				current: -> _.extend {}, $state.current, $state.current
 
 				go: -> $state.go arguments...
 
@@ -14,7 +14,7 @@ do ->
 
 				state: (name) =>
 					_.extend $state.get(name) or {},
-						substates: (@state state.name for state in $state.get() when state.name.includes(name or '') and state.name.length and state.name.nPoints() is if name? then name.nPoints()+1 else 0) or []
+						substates: (@state state.name for state in $state.get() when state.name.contains(name or '') and state.name.length and state.name.nPoints() is if name? then name.nPoints()+1 else 0) or []
 
 				# loading flags control
 

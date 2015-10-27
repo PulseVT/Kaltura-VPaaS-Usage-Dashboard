@@ -26,9 +26,7 @@ do ->
 			@_fetchData()
 
 		_extractPayload: ->
-			@payload =
-				'reportInputFilter:fromDay': @$.dates.from.toYMDn()
-				'reportInputFilter:toDay': @$.dates.to.toYMDn()
+			@payload = @utils.reports.extractPayload @$.dates
 
 		_fetchPlaysNumber: ->
 			@playsReport.playsNumber.fetch(@payload).then (response) =>
@@ -41,18 +39,4 @@ do ->
 		_fetchData: ->
 			@$.months = null
 			@playsReport.graphData.fetch(@payload).then (response) =>
-				months = {}
-				days = @utils.arrToObjByFn response, (day) -> day.date.toYMD()
-				date = new Date @$.dates.from
-				while date.toYMDn() <= @$.dates.to.toYMDn()
-					monthMark = date.toYM()
-					unless months[monthMark]?
-						months[monthMark] =
-							label: @$filter('date') date, 'MMMM, yyyy'
-							dates: []
-							value: 0
-					months[monthMark].dates.push new Date date
-					months[monthMark].value += parseInt days[date.toYMD()]?.value or 0
-					date.setDate date.getDate() + 1
-				@$.months = @utils.objToArr months
-				@$.months.dates = @$.dates
+				@$.months = _.extend response, dates: @$.dates

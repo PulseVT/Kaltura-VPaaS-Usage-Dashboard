@@ -17,3 +17,16 @@ do ->
 
 	module.classy.controller
 		name: 'TranscodingConsumptionReportCtrl'
+		inject: ['transcodingConsumptionReport', 'utils', '$filter']
+
+		fetch: ->
+			@_extractPayload()
+			@_fetchData()
+
+		_extractPayload: ->
+			@payload = @utils.reports.extractPayload @$.dates
+
+		_fetchData: ->
+			@$.months = null
+			@transcodingConsumptionReport.fetch(@payload).then (response) =>
+				@$.months = _.extend response, dates: @$.dates

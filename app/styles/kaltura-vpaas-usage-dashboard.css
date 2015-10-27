@@ -174,8 +174,6 @@ table.one-third-width {
   bottom: 0;
   right: 0;
   left: 0;
-  margin-left: 10px;
-  margin-right: 10px;
   padding: 10px 10px 0 10px;
 }
 @media (max-width: 1200px) {
@@ -264,8 +262,11 @@ table.one-third-width {
 .title-text .export-to-csv [ng-csv] {
   display: block;
 }
+.title-text .export-to-csv.disabled {
+  color: #888888;
+  cursor: default;
+}
 .controls-row {
-  padding: 0 10px;
   line-height: 24px;
   font-size: 15px;
 }

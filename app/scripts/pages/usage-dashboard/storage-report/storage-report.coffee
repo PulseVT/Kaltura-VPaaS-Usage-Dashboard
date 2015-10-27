@@ -24,38 +24,9 @@ do ->
 			@_fetchData()
 
 		_extractPayload: ->
-			@payload =
-				'reportInputFilter:fromDay': @$.dates.from.toYMDn()
-				'reportInputFilter:toDay': @$.dates.to.toYMDn()
+			@payload = @utils.reports.extractPayload @$.dates
 
 		_fetchData: ->
 			@$.months = null
 			@storageReport.fetch(@payload).then (response) =>
-				months = @utils.arrToObjByFn response, (month) =>
-					_.extend month,
-						label: @$filter('date') month.date, 'MMMM, yyyy'
-						value: parseFloat(month.value).toFixed 2
-						dates: []
-					month.date.toYM()
-				date = new Date @$.dates.from
-				while date.toYMDn() <= @$.dates.to.toYMDn()
-					monthMark = date.toYM()
-					months[monthMark].dates.push new Date date
-					date.setDate date.getDate() + 1
-				@$.months = @utils.objToArr months
-				@$.months.dates = @$.dates
-
-		getCsv: ->
-			return unless @$.months?
-			[
-				[
-					'Month'
-					'Average Storage (MB)'
-				]
-			].concat (
-				for month in @$.months
-					[
-						month.label
-						month.value
-					]
-			)
+				@$.months = _.extend response, dates: @$.dates

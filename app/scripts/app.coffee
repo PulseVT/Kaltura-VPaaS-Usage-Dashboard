@@ -22,6 +22,7 @@ do ->
 		'KalturaUsageDashboard.utils'
 		'KalturaUsageDashboard.rest'
 		'KalturaUsageDashboard.collections'
+		'KalturaUsageDashboard.head'
 		#directives
 		'KalturaUsageDashboard.directives.header'
 		'KalturaUsageDashboard.directives.side-menu'
@@ -31,6 +32,7 @@ do ->
 		'KalturaUsageDashboard.directives.spinner'
 		'KalturaUsageDashboard.directives.csv'
 		'KalturaUsageDashboard.directives.overlay'
+		'KalturaUsageDashboard.directives.monthly-breakdown'
 		#services
 		'KalturaUsageDashboard.services.go'
 		#factories

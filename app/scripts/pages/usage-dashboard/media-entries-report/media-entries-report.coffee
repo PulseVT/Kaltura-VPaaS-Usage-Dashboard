@@ -17,3 +17,16 @@ do ->
 
 	module.classy.controller
 		name: 'MediaEntriesReportCtrl'
+		inject: ['mediaEntriesReport', 'utils', '$filter']
+
+		fetch: ->
+			@_extractPayload()
+			@_fetchData()
+
+		_extractPayload: ->
+			@payload = @utils.reports.extractPayload @$.dates
+
+		_fetchData: ->
+			@$.months = null
+			@mediaEntriesReport.fetch(@payload).then (response) =>
+				@$.months = _.extend response, dates: @$.dates
