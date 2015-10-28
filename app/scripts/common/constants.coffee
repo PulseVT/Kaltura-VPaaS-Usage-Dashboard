@@ -24,14 +24,20 @@ do ->
 			medium: 19
 			large: 26
 			full: 32
-		dataDecorators:
-			months: (months) ->
-				for month in months
-					monthDate = new Date month.dates[0]
-					if month.dates.length isnt monthDate.nDaysInMonth() and monthDate.toYMn() in [months.dates.from.toYMn(), months.dates.to.toYMn()]
-						firstDate = monthDate.getDate()
-						lastDate = month.dates[month.dates.length-1].getDate()
-						month.label = "#{firstDate}#{if firstDate isnt lastDate then '-' + lastDate else ''} #{month.label}"
+
+	module.constant 'reports',
+		'overall-usage':
+			name: 'Overall Usage report'
+		plays:
+			name: 'Plays report'
+		storage:
+			name: 'Average Storage report'
+		bandwidth:
+			name: 'Bandwidth Consumption report'
+		'transcoding-consumption':
+			name: 'Transcoding Consumption report'
+		'media-entries':
+			name: 'Media Entries report'
 
 
 	module.constant 'columns',
