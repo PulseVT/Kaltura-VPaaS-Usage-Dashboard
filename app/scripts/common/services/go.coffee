@@ -17,7 +17,7 @@ do ->
 						when 1
 							item = arguments[0]
 							target = $state.href item.name
-							$location.path target
+							$location.path target.replace '#/', ''
 
 				$state: $state
 
