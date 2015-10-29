@@ -40,9 +40,11 @@ do ->
 		#services
 		'KalturaUsageDashboard.services.go'
 		'KalturaUsageDashboard.services.errors-handler'
+		'KalturaUsageDashboard.services.redirector'
 		#factories
 		'KalturaUsageDashboard.factories.rest'
 		'KalturaUsageDashboard.factories.module-consolidator'
+		'KalturaUsageDashboard.factories.modal'
 		#pages
 		'KalturaUsageDashboard.usage-dashboard'
 	]
