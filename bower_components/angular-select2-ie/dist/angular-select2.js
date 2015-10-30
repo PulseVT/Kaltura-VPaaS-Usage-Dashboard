@@ -46,8 +46,8 @@ angular.module("rt.select2", [])
         return {
             require: "ngModel",
             priority: 1,
-            restrict: "E",
-            template: "<input type=\"hidden\"></input>",
+            restrict: "EA",
+            template: "<input type=\"hidden\"/>",
             replace: true,
             link: function (scope, element, attrs, controller) {
                 var getOptions;

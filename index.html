@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" ng-app='KalturaUsageDashboard'>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ng="http://angularjs.org" xmlns:wave="ignored" ng-app='KalturaUsageDashboard' id='ng-app'>
 
 <head ng-controller='HeadCtrl'>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -34,8 +34,38 @@
 
 	<div ui-view='main'></div>
 
+	<!--[if lte IE 8]><!-->
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.2.0/es5-shim.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/json2/20130526/json2.js"></script>
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('article');
+			document.createElement('section');
+			document.createElement('aside');
+			document.createElement('nav');
+			document.createElement('footer');
+			document.createElement('alert');
+			document.createElement('select2');
+			document.createElement('flot');
+			document.createElement('wave-spinner');
+			document.createElement('wave:spinner');
+		</script>
+	<!--<![endif]-->
+	<!--[if IE]><!-->
+		<script type="text/javascript">
+			// Fix for IE ignoring relative base tags.
+			(function() {
+				var baseTag = document.getElementsByTagName('base')[0];
+				baseTag.href = baseTag.href;
+			})();
+		</script>
+	<!--<![endif]-->
+
 	<!-- bower:js -->
 	<script src="bower_components/jquery/dist/jquery.js"></script>
+	<script src="bower_components/ExplorerCanvas/excanvas.js"></script>
+	<script src="bower_components/html5shiv/dist/html5shiv.js"></script>
+	<script src="bower_components/augment/augment.js"></script>
 	<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
 	<script src="bower_components/select2/select2.js"></script>
 	<script src="bower_components/jquery-flot/jquery.flot.js"></script>
@@ -46,7 +76,7 @@
 	<script src="bower_components/jquery-ui/jquery-ui.js"></script>
 	<script src="bower_components/angular-ui-date/src/date.js"></script>
 	<script src="bower_components/flot.tooltip/js/jquery.flot.tooltip.js"></script>
-	<script src="bower_components/angular-select2/dist/angular-select2.js"></script>
+	<script src="bower_components/angular-select2-ie/dist/angular-select2.js"></script>
 	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 	<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
 	<script src="bower_components/ng-bundle-collection/dist/ng-bundle-collection.js"></script>
@@ -66,25 +96,6 @@
 	<script src="app/scripts/build/kaltura-vpaas-usage-dashboard.js"></script>
 	<!-- /include -->
 
-	<!--
-		IE8 support, see AngularJS Internet Explorer Compatibility http://docs.angularjs.org/guide/ie
-		For Firefox 3.6, you will also need to include jQuery and ECMAScript 5 shim
-	-->
-	<!--[if lt IE 9]>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.2.0/es5-shim.js"></script>
-		<script>
-			document.createElement('ui-select');
-			document.createElement('ui-select-match');
-			document.createElement('ui-select-choices');
-			document.createElement('header');
-			document.createElement('article');
-			document.createElement('section');
-			document.createElement('aside');
-			document.createElement('nav');
-			document.createElement('footer');
-		</script>
-	<![endif]-->
 
 	<div spinner></div>
 
