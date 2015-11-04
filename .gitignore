@@ -4,3 +4,4 @@ html/*
 gitignore/*
 app/scripts/*.js
 index.html
+app/tests/protractor/specs/*
