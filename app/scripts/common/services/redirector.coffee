@@ -7,7 +7,7 @@ do ->
 		'$state'
 		($location, $state) ->
 			(name) ->
-				url = $state.href name
+				url = $state.href(name).replace '#/', ''
 				params = $location.search()
 				unless _.isEmpty params
 					url += '?'

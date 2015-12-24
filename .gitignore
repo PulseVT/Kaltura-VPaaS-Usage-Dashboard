@@ -2,8 +2,11 @@ node_modules/*
 html/*
 *.sublime*
 gitignore/*
-app/scripts/build/*
 app/scripts/*.js
 dist/*
 index.html
+<<<<<<< HEAD
 app/tests/protractor/specs/*
+=======
+app/tests/protractor/specs/*
+>>>>>>> c35868c2b2b420a4ba5189b04de80f56f4be7dae

@@ -14,6 +14,7 @@
 	<title>KMC &gt; Usage Dashboard &gt; {{go.current().data.pageTitle}}</title>
 	<link rel='shortcut icon' href='http://corp.kaltura.com/sites/default/files/favicon%20%289%29_0.ico' type='image/ico'>
 
+<<<<<<< HEAD
 	<!-- include: "type": "css", "files": "<%= included_css_files %>" -->
 	<link href="bower_components/jquery-ui/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css">
 	<link href="bower_components/jquery-ui-bootstrap/jquery.ui.theme.css" rel="stylesheet" type="text/css">
@@ -21,6 +22,18 @@
 	<link href="bower_components/select2/select2.css" rel="stylesheet" type="text/css">
 	<link href="bower_components/angular-spinkit/build/angular-spinkit.min.css" rel="stylesheet" type="text/css">
 	<link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+=======
+	<link rel="stylesheet" type="text/css" href="bower_components/jquery-ui/themes/smoothness/jquery-ui.css"/>
+	<link rel="stylesheet" type="text/css" href="bower_components/jquery-ui-bootstrap/jquery.ui.theme.css"/>
+	<link rel="stylesheet" type="text/css" href="bower_components/font-awesome/css/font-awesome.css"/>
+	<link rel="stylesheet" type="text/css" href="bower_components/select2/select2.css"/>
+	<link rel="stylesheet" type="text/css" href="bower_components/angular-spinkit/build/angular-spinkit.min.css">
+	<!-- include: "type": "css", "files": "<%= config.styles %>/!kmc.css" -->
+	<link href="app/styles/!kmc.css" rel="stylesheet" type="text/css">
+	<!-- /include -->
+	<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<!-- include: "type": "css", "files": "<%= config.styles %>/<%= bower.name %>.css" -->
+>>>>>>> c35868c2b2b420a4ba5189b04de80f56f4be7dae
 	<link href="app/styles/kaltura-vpaas-usage-dashboard.css" rel="stylesheet" type="text/css">
 	<!-- /include -->
 </head>
@@ -35,6 +48,11 @@
 		<script>
 			navigator.isIE9orLess = true;
 		</script>
+<<<<<<< HEAD
+=======
+		<script src="bower_components/Downloadify/js/swfobject.js"></script>
+		<script src="bower_components/Downloadify/src/downloadify.js"></script>
+>>>>>>> c35868c2b2b420a4ba5189b04de80f56f4be7dae
 	<![endif]-->
 
 	<!--[if lte IE 8]>
@@ -42,6 +60,7 @@
 			navigator.isIE8orLess = true;
 		</script>
 	<![endif]-->
+<<<<<<< HEAD
 	
 	<!--[if IE]>
 		<script>
@@ -53,6 +72,28 @@
 	<script src="app/shims/es5-shim.js"></script>
 	<script src="app/shims/json2.js"></script>
 	<script src="app/shims/shims.js"></script>
+=======
+
+	<!--[if lte IE 8]>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.2.0/es5-shim.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/json2/20130526/json2.js"></script>
+		<script type="text/javascript">
+			document.createElement('header');
+			document.createElement('article');
+			document.createElement('section');
+			document.createElement('aside');
+			document.createElement('nav');
+			document.createElement('footer');
+			document.createElement('alert');
+			document.createElement('select2');
+			document.createElement('flot');
+			document.createElement('wave-spinner');
+			document.createElement('wave:spinner');
+		</script>
+	<![endif]-->
+
+	<!-- bower:js -->
+>>>>>>> c35868c2b2b420a4ba5189b04de80f56f4be7dae
 	<script src="bower_components/jquery/dist/jquery.js"></script>
 	<script src="bower_components/ExplorerCanvas/excanvas.js"></script>
 	<script src="bower_components/html5shiv/dist/html5shiv.js"></script>
@@ -129,6 +170,59 @@
 	<script src="app/scripts/build/templates.js"></script>
 	<!-- /include -->
 
+<<<<<<< HEAD
+=======
+	<!-- include: "type": "js", "files": "<%= config.js_build %>/**/*.js" -->
+	<script src="app/scripts/build/app.js"></script>
+	<script src="app/scripts/build/common/class.js"></script>
+	<script src="app/scripts/build/common/collections.js"></script>
+	<script src="app/scripts/build/common/config.js"></script>
+	<script src="app/scripts/build/common/constants.js"></script>
+	<script src="app/scripts/build/common/directives/csv/csv.js"></script>
+	<script src="app/scripts/build/common/directives/datepicker/datepicker.js"></script>
+	<script src="app/scripts/build/common/directives/graph/graph.js"></script>
+	<script src="app/scripts/build/common/directives/header/header.js"></script>
+	<script src="app/scripts/build/common/directives/html-bind-compile/html-bind-compile.js"></script>
+	<script src="app/scripts/build/common/directives/modal/modal.js"></script>
+	<script src="app/scripts/build/common/directives/monthly-breakdown/monthly-breakdown.js"></script>
+	<script src="app/scripts/build/common/directives/overlay/overlay.js"></script>
+	<script src="app/scripts/build/common/directives/report-controls/report-controls.js"></script>
+	<script src="app/scripts/build/common/directives/side-menu/side-menu.js"></script>
+	<script src="app/scripts/build/common/directives/spinner/spinner.js"></script>
+	<script src="app/scripts/build/common/factories/modal-factory.js"></script>
+	<script src="app/scripts/build/common/factories/module-consolidator.js"></script>
+	<script src="app/scripts/build/common/factories/rest-factory.js"></script>
+	<script src="app/scripts/build/common/filters.js"></script>
+	<script src="app/scripts/build/common/head.js"></script>
+	<script src="app/scripts/build/common/kmc-config.js"></script>
+	<script src="app/scripts/build/common/modals/confirm-modal.js"></script>
+	<script src="app/scripts/build/common/modals/error-modal.js"></script>
+	<script src="app/scripts/build/common/modals/info-modal.js"></script>
+	<script src="app/scripts/build/common/modals/success-modal.js"></script>
+	<script src="app/scripts/build/common/modals/warning-modal.js"></script>
+	<script src="app/scripts/build/common/rest.js"></script>
+	<script src="app/scripts/build/common/rest/bandwidth-report-rest.js"></script>
+	<script src="app/scripts/build/common/rest/media-entries-rest.js"></script>
+	<script src="app/scripts/build/common/rest/plays-report-rest.js"></script>
+	<script src="app/scripts/build/common/rest/storage-report-rest.js"></script>
+	<script src="app/scripts/build/common/rest/transcoding-consumption-rest.js"></script>
+	<script src="app/scripts/build/common/rest/users-rest.js"></script>
+	<script src="app/scripts/build/common/run.js"></script>
+	<script src="app/scripts/build/common/services/errors-handler.js"></script>
+	<script src="app/scripts/build/common/services/go.js"></script>
+	<script src="app/scripts/build/common/services/modals.js"></script>
+	<script src="app/scripts/build/common/services/redirector.js"></script>
+	<script src="app/scripts/build/common/utils.js"></script>
+	<script src="app/scripts/build/pages/usage-dashboard/bandwidth-report/bandwidth-report.js"></script>
+	<script src="app/scripts/build/pages/usage-dashboard/media-entries-report/media-entries-report.js"></script>
+	<script src="app/scripts/build/pages/usage-dashboard/overall-usage-report/overall-usage-report.js"></script>
+	<script src="app/scripts/build/pages/usage-dashboard/plays-report/plays-report.js"></script>
+	<script src="app/scripts/build/pages/usage-dashboard/storage-report/storage-report.js"></script>
+	<script src="app/scripts/build/pages/usage-dashboard/transcoding-consumption-report/transcoding-consumption-report.js"></script>
+	<script src="app/scripts/build/pages/usage-dashboard/usage-dashboard.js"></script>
+	<!-- /include -->
+
+>>>>>>> c35868c2b2b420a4ba5189b04de80f56f4be7dae
 
 	<div spinner></div>
 
