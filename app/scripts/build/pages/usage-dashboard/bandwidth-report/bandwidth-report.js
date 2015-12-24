@@ -19,7 +19,7 @@
   ]);
   return module.classy.controller({
     name: 'BandwidthReportCtrl',
-    inject: ['bandwidthReport', 'utils', '$filter'],
+    inject: ['utils', 'vpaasUsageReport'],
     fetch: function() {
       this._extractPayload();
       return this._fetchData();
@@ -29,15 +29,11 @@
     },
     _fetchData: function() {
       this.$.months = null;
-      return this.bandwidthReport.fetch(this.payload).then((function(_this) {
+      return this.vpaasUsageReport.bandwidth(this.payload).then((function(_this) {
         return function(response) {
           return _this.$.months = _.extend(response, {
             dates: _this.$.dates
           });
-        };
-      })(this), (function(_this) {
-        return function(response) {
-          return console.log(response);
         };
       })(this));
     }

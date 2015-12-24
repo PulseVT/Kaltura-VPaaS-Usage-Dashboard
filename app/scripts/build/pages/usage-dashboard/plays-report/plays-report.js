@@ -19,7 +19,7 @@
   ]);
   return module.classy.controller({
     name: 'PlaysReportCtrl',
-    inject: ['playsReport', 'utils'],
+    inject: ['utils', 'vpaasUsageReport'],
     fetch: function() {
       this._extractPayload();
       this._fetchPlaysNumber();
@@ -30,14 +30,14 @@
       return this.payload = this.utils.reports.extractPayload(this.$.dates);
     },
     _fetchPlaysNumber: function() {
-      return this.playsReport.playsNumber.fetch(this.payload).then((function(_this) {
+      return this.vpaasUsageReport.plays.number(this.payload).then((function(_this) {
         return function(response) {
           return _this.$.playsNumber = response;
         };
       })(this));
     },
     _fetchMediaEntriesNumber: function() {
-      return this.playsReport.mediaEntriesNumber.fetch(this.payload).then((function(_this) {
+      return this.vpaasUsageReport.plays.mediaEntriesNumber(this.payload).then((function(_this) {
         return function(response) {
           return _this.$.mediaEntriesNumber = response;
         };
@@ -45,7 +45,7 @@
     },
     _fetchData: function() {
       this.$.months = null;
-      return this.playsReport.graphData.fetch(this.payload).then((function(_this) {
+      return this.vpaasUsageReport.plays.data(this.payload).then((function(_this) {
         return function(response) {
           return _this.$.months = _.extend(response, {
             dates: _this.$.dates

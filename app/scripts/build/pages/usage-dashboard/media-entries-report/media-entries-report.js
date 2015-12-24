@@ -19,7 +19,7 @@
   ]);
   return module.classy.controller({
     name: 'MediaEntriesReportCtrl',
-    inject: ['mediaEntriesReport', 'utils', '$filter'],
+    inject: ['vpaasUsageReport', 'utils'],
     fetch: function() {
       this._extractPayload();
       return this._fetchData();
@@ -29,7 +29,7 @@
     },
     _fetchData: function() {
       this.$.months = null;
-      return this.mediaEntriesReport.fetch(this.payload).then((function(_this) {
+      return this.vpaasUsageReport.media(this.payload).then((function(_this) {
         return function(response) {
           return _this.$.months = _.extend(response, {
             dates: _this.$.dates

@@ -52,58 +52,59 @@
       plays: [
         {
           title: 'Plays (CPM)',
-          field: 'count_plays'
+          field: 'total_plays',
+          csvHeader: 'plays'
         }
       ],
       storage: [
         {
           title: 'Average Storage (GB)',
-          field: 'average_storage'
+          field: 'avg_storage_gb',
+          csvHeader: 'plays'
         }
       ],
       bandwidth: [
         {
           title: 'Bandwidth Consumption (GB)',
-          field: 'bandwidth_consumption'
+          field: 'bandwidth_gb',
+          csvHeader: 'plays'
         }
       ],
       'transcoding-consumption': [
         {
           title: 'Transcoding Consumption (GB)',
-          field: 'transcoding_consumption'
+          field: 'transcoding_gb',
+          csvHeader: 'plays'
         }
       ],
       'media-entries': [
         {
           title: 'Total',
-          field: 'count_total'
-        }, {
-          title: 'Video',
-          field: 'count_video'
-        }, {
-          title: 'Audio',
-          field: 'count_audio'
-        }, {
-          title: 'Images',
-          field: 'count_image'
+          field: 'total_media_entries',
+          csvHeader: 'plays'
         }
       ],
       'overall-usage': [
         {
           title: 'Plays (CPM)',
-          field: 'count_plays'
+          field: 'total_plays',
+          csvHeader: 'plays'
         }, {
           title: 'Average Storage (GB)',
-          field: 'average_storage'
+          field: 'avg_storage_gb',
+          csvHeader: 'plays'
         }, {
           title: 'Transcoding Consumption (GB)',
-          field: 'transcoding_consumption'
+          field: 'transcoding_gb',
+          csvHeader: 'plays'
         }, {
           title: 'Bandwidth Consumption (GB)',
-          field: 'bandwidth_consumption'
+          field: 'bandwidth_gb',
+          csvHeader: 'plays'
         }, {
           title: 'Media Entries',
-          field: 'count_total'
+          field: 'total_media_entries',
+          csvHeader: 'plays'
         }
       ]
     }
@@ -262,8 +263,7 @@
         nDaysInMonth: function() {
           var d;
           d = new Date(this);
-          d.setMonth(d.getMonth() + 1);
-          d.setDate(0);
+          d.toMonthEnd();
           return d.getDate();
         },
         dg: function(date) {

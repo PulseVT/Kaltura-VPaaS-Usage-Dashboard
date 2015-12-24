@@ -22,12 +22,21 @@
             return _.extend(this, {
               extract: {
                 dict: function(response) {
-                  var keys, ref, ref1, values;
+                  var keys, line, lines, ref, ref1, values;
                   if (response == null) {
                     response = {};
                   }
                   keys = (ref = response.header) != null ? ref.split(',') : void 0;
-                  values = (ref1 = response.data) != null ? ref1.split(',') : void 0;
+                  lines = _.compact((ref1 = response.data) != null ? ref1.split(';') : void 0);
+                  values = _.unzip((function() {
+                    var i, len, results;
+                    results = [];
+                    for (i = 0, len = lines.length; i < len; i++) {
+                      line = lines[i];
+                      results.push(line.split(','));
+                    }
+                    return results;
+                  })());
                   return _.zipObject(keys, values);
                 },
                 graph: function(response) {
@@ -91,6 +100,26 @@
                       to: Date.fromYMDn(to)
                     });
                   };
+                })(this),
+                monthsComprehensive: (function(_this) {
+                  return function(response, payload) {
+                    var dict, from, i, index, key, ref, result, to, values;
+                    dict = _this.extract.dict(response);
+                    result = [];
+                    for (index = i = 0, ref = dict.month_id.length - 1; 0 <= ref ? i <= ref : i >= ref; index = 0 <= ref ? ++i : --i) {
+                      result[index] = {};
+                      for (key in dict) {
+                        values = dict[key];
+                        result[index][key] = values[index];
+                      }
+                    }
+                    from = payload['reportInputFilter:fromDay'];
+                    to = payload['reportInputFilter:toDay'];
+                    return _this.convert.parseFloat(_this.convert.monthsLabelsComprehensive(result, {
+                      from: Date.fromYMDn(from),
+                      to: Date.fromYMDn(to)
+                    }));
+                  };
                 })(this)
               },
               convert: {
@@ -117,6 +146,56 @@
                     }
                   }
                   return months;
+                },
+                monthsLabelsComprehensive: function(months, dates) {
+                  var firstDate, fromYMn, i, lastDate, len, month, monthDate, monthDateYMn, toYMn;
+                  fromYMn = dates.from.toYMn();
+                  toYMn = dates.to.toYMn();
+                  for (i = 0, len = months.length; i < len; i++) {
+                    month = months[i];
+                    monthDateYMn = parseInt(month.month_id);
+                    monthDate = Date.fromYMn(monthDateYMn);
+                    firstDate = monthDateYMn === fromYMn ? dates.from.getDate() : 1;
+                    lastDate = monthDateYMn === toYMn ? dates.to.getDate() : monthDate.nDaysInMonth();
+                    month.label = $filter('date')(monthDate, 'MMMM, yyyy');
+                    if (firstDate !== 1 || lastDate !== monthDate.nDaysInMonth()) {
+                      month.label = "" + firstDate + (firstDate !== lastDate ? '-' + lastDate : '') + " " + month.label;
+                    }
+                  }
+                  return months;
+                },
+                parseFloat: function(months) {
+                  var i, key, len, month, value;
+                  for (i = 0, len = months.length; i < len; i++) {
+                    month = months[i];
+                    for (key in month) {
+                      value = month[key];
+                      if (key !== 'label') {
+                        month[key] = parseFloat(value) || 0;
+                      }
+                    }
+                  }
+                  return months;
+                },
+                sum: function(months, field) {
+                  var i, len, month, sum;
+                  sum = 0;
+                  for (i = 0, len = months.length; i < len; i++) {
+                    month = months[i];
+                    sum += parseFloat(month[field]) || 0;
+                  }
+                  return sum;
+                },
+                pick: function(months, field) {
+                  var i, item, len, month, results;
+                  results = [];
+                  for (i = 0, len = months.length; i < len; i++) {
+                    month = months[i];
+                    item = _.pick(month, 'label', field);
+                    item[field] = parseFloat(item[field]) || 0;
+                    results.push(item);
+                  }
+                  return results;
                 }
               }
             });
@@ -129,6 +208,7 @@
           return function(parsed, payload) {
             if (parsed.error != null) {
               _this.cancelAllRequests(parsed);
+              errorsHandler(parsed);
               return {};
             } else {
               return parsed;

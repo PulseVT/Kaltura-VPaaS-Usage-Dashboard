@@ -18,7 +18,7 @@
             }
             break;
           default:
-            return input;
+            return input || 0;
         }
       };
     }
