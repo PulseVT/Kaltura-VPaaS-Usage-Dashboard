@@ -1,6 +1,6 @@
-# Kaltura VPaaS Usage Dashboard
+# vpaas-usage-dashboard
 
-Kaltura VPaaS Usage Dashboard frontend (Angular.js)
+VPaaS Usage Dashboard frontend (Angular.js)
 
 ## Preparations
 
@@ -9,7 +9,6 @@ Kaltura VPaaS Usage Dashboard frontend (Angular.js)
 > bower install
 
 ## Serving
-
 
 ### Development version
 
@@ -44,6 +43,27 @@ which is equal to
 ### Production version
 
 > grunt build:production
+
+This also creates a zip package in `packages` folder with name as version taken from bower.json
+
+## Tests
+
+### E2E tests
+
+> npm install -g protractor
+
+> npm install
+
+> node_modules/grunt-webdriver-manager/bin/webdriver-manager update
+
+*Important!* webdriver-manager update this must be ran exactly in that folder
+
+> grunt e2e:target:ks
+
+Where
+
+- `target` is 'development' or 'production'. *Default:* 'development'
+- 'ks' is kaltura login token (kmc.vars.ks) which would be passed to app during testing (a way to append ?ks=<ks> as a url parameter to all urls)
 
 ## Deploying to github pages
 

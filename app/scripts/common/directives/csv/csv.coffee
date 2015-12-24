@@ -10,23 +10,41 @@ do ->
 		scope:
 			filename: '@'
 			name: '@csv'
-			months: '='
+			dates: '='
 
 	module.classy.controller
 		name: 'CsvCtrl'
-		inject: ['constants', '$filter']
+		inject: [
+			'vpaasUsageReport'
+			'constants'
+			'$filter'
+			'modals'
+			'constants'
+		]
+		injectToScope: ['utils']
 
-		getCsvArray: ->
-			columns = @constants.columns.reports[@$.name]
-			[
-				[
-					'Month'
-					'Year'
-				].concat (column.title for column in columns)
-			].concat (
-				for month in @$.months
-					[
-						@$filter('date') month.dates[0], 'MMMM'
-						@$filter('date') month.dates[0], 'yyyy'
-					].concat (month[column.field] for column in columns)
-			)
+		init: ->
+			@output = @$filter 'output'
+			@date = @$filter 'date'
+
+		filename_: ->
+			"kaltura-#{@$.filename or @$.name}-report.csv"
+
+		_modal: ->
+			from = @$.dates.from
+			to = @$.dates.to
+			@modals.confirm.open
+				message: """
+					<div>You are going to download <b>#{@constants.reports[@$.name].name}</b> in .csv format.</div>
+					<div>Period: <b>#{@date from}#{if from.toYMD() isnt to.toYMD() then ' - ' + @date to else ''}</b></div>
+					<div>Proceed?</div>
+				"""
+				title: 'Export CSV'
+
+		export: ->
+			@_modal().result.then =>
+				@vpaasUsageReport.fetch(@utils.csv.extractPayload @$.dates, @$.name).then (response) =>
+					a = document.createElement 'a'
+					a.download = @$.filename_()
+					a.href = response
+					a.click()

@@ -1,6 +1,6 @@
 {
   "name": "ng-bundle-collection",
-  "version": "1.0.5",
+  "version": "1.0.14",
   "authors": [
     "Vitaliy Tarash <vitaliy.tarash@gmail.com>"
   ],
@@ -9,11 +9,20 @@
     "type": "git",
     "url": "https://github.com/PulseVT/ng-bundle-collection"
   },
+  "main": [
+    "bower_components/lodash/lodash.min.js",
+    "dist/ng-bundle-collection.js"
+  ],
   "devDependencies": {
-    "angular": "~1.4.7",
-    "restangular": "~1.5.1"
+    "angular-ui-router": "^0.2.15",
+    "angular-bootstrap": "^0.14.3",
+    "bootstrap-bower": "^3.0.0"
   },
-  "main": "dist/ng-bundle-collection.js",
+  "dependencies": {
+    "angular": "^1.4.7",
+    "restangular": "^1.5.1",
+    "lodash": "~3.10.1"
+  },
   "homepage": "https://github.com/PulseVT/ng-bundle-collection",
   "ignore": [
     "**/.*",
@@ -22,13 +31,13 @@
     "test",
     "tests"
   ],
-  "_release": "1.0.5",
+  "_release": "1.0.14",
   "_resolution": {
     "type": "version",
-    "tag": "1.0.5",
-    "commit": "44ab54e16738e3aff24f1b4613abc967b353ffc3"
+    "tag": "1.0.14",
+    "commit": "e4de9cd90072df6d7d62c84374f96455697190ba"
   },
   "_source": "git://github.com/PulseVT/ng-bundle-collection.git",
-  "_target": "~1.0.5",
+  "_target": "~1.0.14",
   "_originalSource": "ng-bundle-collection"
 }

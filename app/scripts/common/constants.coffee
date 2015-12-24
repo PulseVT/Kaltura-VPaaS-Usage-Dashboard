@@ -24,14 +24,20 @@ do ->
 			medium: 19
 			large: 26
 			full: 32
-		dataDecorators:
-			months: (months) ->
-				for month in months
-					monthDate = new Date month.dates[0]
-					if month.dates.length isnt monthDate.nDaysInMonth() and monthDate.toYMn() in [months.dates.from.toYMn(), months.dates.to.toYMn()]
-						firstDate = monthDate.getDate()
-						lastDate = month.dates[month.dates.length-1].getDate()
-						month.label = "#{firstDate}#{if firstDate isnt lastDate then '-' + lastDate else ''} #{month.label}"
+
+	module.constant 'reports',
+		'overall-usage':
+			name: 'Overall Usage report'
+		plays:
+			name: 'Plays report'
+		storage:
+			name: 'Average Storage report'
+		bandwidth:
+			name: 'Bandwidth Consumption report'
+		'transcoding-consumption':
+			name: 'Transcoding Consumption report'
+		'media-entries':
+			name: 'Media Entries report'
 
 
 	module.constant 'columns',
@@ -42,51 +48,52 @@ do ->
 		reports:
 			plays: [
 				title: 'Plays (CPM)'
-				field: 'count_plays'
+				field: 'total_plays'
+				csvHeader: 'plays'
 			]
 			storage: [
 				title: 'Average Storage (GB)'
-				field: 'average_storage'
+				field: 'avg_storage_gb'
+				csvHeader: 'plays'
 			]
 			bandwidth: [
 				title: 'Bandwidth Consumption (GB)'
-				field: 'bandwidth_consumption'
+				field: 'bandwidth_gb'
+				csvHeader: 'plays'
 			]
 			'transcoding-consumption': [
 				title: 'Transcoding Consumption (GB)'
-				field: 'transcoding_consumption'
+				field: 'transcoding_gb'
+				csvHeader: 'plays'
 			]
 			'media-entries': [
 				title: 'Total'
-				field: 'count_total'
-			,
-				title: 'Video'
-				field: 'count_video'
-			,
-				title: 'Audio'
-				field: 'count_audio'
-			,
-				title: 'Images'
-				field: 'count_image'
+				field: 'total_media_entries'
+				csvHeader: 'plays'
 			]
 			'overall-usage': [
 				title: 'Plays (CPM)'
-				field: 'count_plays'
+				field: 'total_plays'
+				csvHeader: 'plays'
 			,
 				title: 'Average Storage (GB)'
-				field: 'average_storage'
+				field: 'avg_storage_gb'
+				csvHeader: 'plays'
 			,
 				title: 'Transcoding Consumption (GB)'
-				field: 'transcoding_consumption'
+				field: 'transcoding_gb'
+				csvHeader: 'plays'
 			,
 				title: 'Bandwidth Consumption (GB)'
-				field: 'bandwidth_consumption'
+				field: 'bandwidth_gb'
+				csvHeader: 'plays'
 			,
 				title: 'Media Entries'
-				field: 'count_total'
-			,
-				title: 'End Users'
-				field: 'end_users'
+				field: 'total_media_entries'
+				csvHeader: 'plays'
+			# ,
+			# 	title: 'End Users'
+			# 	field: 'end_users'
 			]
 
 
@@ -189,8 +196,7 @@ do ->
 
 			nDaysInMonth: ->
 				d = new Date @
-				d.setMonth d.getMonth() + 1
-				d.setDate 0
+				d.toMonthEnd()
 				d.getDate()
 
 			#date greater (@ > date ?) comparison in DAYS context
