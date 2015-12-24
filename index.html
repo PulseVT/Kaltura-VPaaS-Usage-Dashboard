@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" ng-app='KalturaUsageDashboard'>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ng="http://angularjs.org" xmlns:wave="ignored" ng-app='KalturaUsageDashboard' id='ng-app'>
 
 <head ng-controller='HeadCtrl'>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -14,14 +14,13 @@
 	<title>KMC &gt; Usage Dashboard &gt; {{go.current().data.pageTitle}}</title>
 	<link rel='shortcut icon' href='http://corp.kaltura.com/sites/default/files/favicon%20%289%29_0.ico' type='image/ico'>
 
-	<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="bower_components/jquery-ui/themes/smoothness/jquery-ui.css"/>
-	<link rel="stylesheet" type="text/css" href="bower_components/font-awesome/css/font-awesome.css"/>
-	<link rel="stylesheet" type="text/css" href="bower_components/select2/select2.css"/>
-	<link rel="stylesheet" type="text/css" href="bower_components/angular-spinkit/build/angular-spinkit.min.css">
-
-	<!-- include: "type": "css", "files": "<%= config.styles %>/**/*.css" -->
-	<link href="app/styles/!kmc.css" rel="stylesheet" type="text/css">
+	<!-- include: "type": "css", "files": "<%= included_css_files %>" -->
+	<link href="bower_components/jquery-ui/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css">
+	<link href="bower_components/jquery-ui-bootstrap/jquery.ui.theme.css" rel="stylesheet" type="text/css">
+	<link href="bower_components/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
+	<link href="bower_components/select2/select2.css" rel="stylesheet" type="text/css">
+	<link href="bower_components/angular-spinkit/build/angular-spinkit.min.css" rel="stylesheet" type="text/css">
+	<link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 	<link href="app/styles/kaltura-vpaas-usage-dashboard.css" rel="stylesheet" type="text/css">
 	<!-- /include -->
 </head>
@@ -32,19 +31,43 @@
 
 	<div ui-view='main'></div>
 
-	<!-- bower:js -->
+	<!--[if lte IE 9]>
+		<script>
+			navigator.isIE9orLess = true;
+		</script>
+	<![endif]-->
+
+	<!--[if lte IE 8]>
+		<script>
+			navigator.isIE8orLess = true;
+		</script>
+	<![endif]-->
+	
+	<!--[if IE]>
+		<script>
+			navigator.isIE = true;
+		</script>
+	<![endif]-->
+
+	<!-- include: "type": "js", "files": "<%= included_js_files %>" -->
+	<script src="app/shims/es5-shim.js"></script>
+	<script src="app/shims/json2.js"></script>
+	<script src="app/shims/shims.js"></script>
 	<script src="bower_components/jquery/dist/jquery.js"></script>
+	<script src="bower_components/ExplorerCanvas/excanvas.js"></script>
+	<script src="bower_components/html5shiv/dist/html5shiv.js"></script>
+	<script src="bower_components/augment/augment.js"></script>
 	<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
 	<script src="bower_components/select2/select2.js"></script>
 	<script src="bower_components/jquery-flot/jquery.flot.js"></script>
 	<script src="bower_components/angular/angular.js"></script>
 	<script src="bower_components/lodash/lodash.js"></script>
-	<script src="bower_components/restangular/dist/restangular.js"></script>
+	<script src="bower_components/restangular/dist/restangular.min.js"></script>
 	<script src="bower_components/angular-flot/angular-flot.js"></script>
 	<script src="bower_components/jquery-ui/jquery-ui.js"></script>
 	<script src="bower_components/angular-ui-date/src/date.js"></script>
 	<script src="bower_components/flot.tooltip/js/jquery.flot.tooltip.js"></script>
-	<script src="bower_components/angular-select2/dist/angular-select2.js"></script>
+	<script src="bower_components/angular-select2-ie/dist/angular-select2.js"></script>
 	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 	<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
 	<script src="bower_components/ng-bundle-collection/dist/ng-bundle-collection.js"></script>
@@ -53,36 +76,59 @@
 	<script src="bower_components/angular-spinkit/build/angular-spinkit.js"></script>
 	<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
 	<script src="bower_components/ng-csv/build/ng-csv.min.js"></script>
-	<!-- endbower -->
 	<script src="bower_components/flot-axislabels/jquery.flot.axislabels.js"></script>
-
-	<!-- include: "type": "js", "files": "<%= config.assets %>/**/*.js" -->
 	<script src="app/assets/angular-classy/angular-classy.js"></script>
+	<script src="app/scripts/build/app.js"></script>
+	<script src="app/scripts/build/common/class.js"></script>
+	<script src="app/scripts/build/common/collections.js"></script>
+	<script src="app/scripts/build/common/config.js"></script>
+	<script src="app/scripts/build/common/constants.js"></script>
+	<script src="app/scripts/build/common/directives/csv/csv.js"></script>
+	<script src="app/scripts/build/common/directives/datepicker/datepicker.js"></script>
+	<script src="app/scripts/build/common/directives/graph/graph.js"></script>
+	<script src="app/scripts/build/common/directives/header/header.js"></script>
+	<script src="app/scripts/build/common/directives/html-bind-compile/html-bind-compile.js"></script>
+	<script src="app/scripts/build/common/directives/modal/modal.js"></script>
+	<script src="app/scripts/build/common/directives/monthly-breakdown/monthly-breakdown.js"></script>
+	<script src="app/scripts/build/common/directives/overlay/overlay.js"></script>
+	<script src="app/scripts/build/common/directives/report-controls/report-controls.js"></script>
+	<script src="app/scripts/build/common/directives/side-menu/side-menu.js"></script>
+	<script src="app/scripts/build/common/directives/spinner/spinner.js"></script>
+	<script src="app/scripts/build/common/factories/modal-factory.js"></script>
+	<script src="app/scripts/build/common/factories/module-consolidator.js"></script>
+	<script src="app/scripts/build/common/factories/rest-factory.js"></script>
+	<script src="app/scripts/build/common/filters.js"></script>
+	<script src="app/scripts/build/common/head.js"></script>
+	<script src="app/scripts/build/common/kmc-config.js"></script>
+	<script src="app/scripts/build/common/modals/confirm-modal.js"></script>
+	<script src="app/scripts/build/common/modals/error-modal.js"></script>
+	<script src="app/scripts/build/common/modals/info-modal.js"></script>
+	<script src="app/scripts/build/common/modals/success-modal.js"></script>
+	<script src="app/scripts/build/common/modals/warning-modal.js"></script>
+	<script src="app/scripts/build/common/rest.js"></script>
+	<script src="app/scripts/build/common/rest/bandwidth-report-rest.js"></script>
+	<script src="app/scripts/build/common/rest/media-entries-rest.js"></script>
+	<script src="app/scripts/build/common/rest/plays-report-rest.js"></script>
+	<script src="app/scripts/build/common/rest/storage-report-rest.js"></script>
+	<script src="app/scripts/build/common/rest/transcoding-consumption-rest.js"></script>
+	<script src="app/scripts/build/common/rest/users-rest.js"></script>
+	<script src="app/scripts/build/common/rest/vpaas-usage-report-rest.js"></script>
+	<script src="app/scripts/build/common/run.js"></script>
+	<script src="app/scripts/build/common/services/errors-handler.js"></script>
+	<script src="app/scripts/build/common/services/go.js"></script>
+	<script src="app/scripts/build/common/services/modals.js"></script>
+	<script src="app/scripts/build/common/services/redirector.js"></script>
+	<script src="app/scripts/build/common/utils.js"></script>
+	<script src="app/scripts/build/pages/usage-dashboard/bandwidth-report/bandwidth-report.js"></script>
+	<script src="app/scripts/build/pages/usage-dashboard/media-entries-report/media-entries-report.js"></script>
+	<script src="app/scripts/build/pages/usage-dashboard/overall-usage-report/overall-usage-report.js"></script>
+	<script src="app/scripts/build/pages/usage-dashboard/plays-report/plays-report.js"></script>
+	<script src="app/scripts/build/pages/usage-dashboard/storage-report/storage-report.js"></script>
+	<script src="app/scripts/build/pages/usage-dashboard/transcoding-consumption-report/transcoding-consumption-report.js"></script>
+	<script src="app/scripts/build/pages/usage-dashboard/usage-dashboard.js"></script>
+	<script src="app/scripts/build/templates.js"></script>
 	<!-- /include -->
 
-	<!-- include: "type": "js", "files": "<%= config.js_build %>/**/*.js" -->
-	<script src="app/scripts/build/kaltura-vpaas-usage-dashboard.js"></script>
-	<!-- /include -->
-
-	<!--
-		IE8 support, see AngularJS Internet Explorer Compatibility http://docs.angularjs.org/guide/ie
-		For Firefox 3.6, you will also need to include jQuery and ECMAScript 5 shim
-	-->
-	<!--[if lt IE 9]>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.2.0/es5-shim.js"></script>
-		<script>
-			document.createElement('ui-select');
-			document.createElement('ui-select-match');
-			document.createElement('ui-select-choices');
-			document.createElement('header');
-			document.createElement('article');
-			document.createElement('section');
-			document.createElement('aside');
-			document.createElement('nav');
-			document.createElement('footer');
-		</script>
-	<![endif]-->
 
 	<div spinner></div>
 
