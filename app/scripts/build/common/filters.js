@@ -1,7 +1,7 @@
 (function() {
   var module;
   module = angular.module('KalturaUsageDashboard.filters', []);
-  return module.filter('output', [
+  module.filter('output', [
     '$filter', function($filter) {
       var nFilter;
       nFilter = $filter('number');
@@ -19,6 +19,22 @@
             break;
           default:
             return input || 0;
+        }
+      };
+    }
+  ]);
+  return module.filter('arr_reverse', [
+    function() {
+      return function(input) {
+        var i, index, ref, results;
+        if (_.isArray(input)) {
+          results = [];
+          for (index = i = ref = input.length - 1; ref <= 0 ? i <= 0 : i >= 0; index = ref <= 0 ? ++i : --i) {
+            results.push(input[index]);
+          }
+          return results;
+        } else {
+          return input;
         }
       };
     }

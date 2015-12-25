@@ -1,22 +1,25 @@
 /**
  * @file jQuery UI Datepicker plugin wrapper
+ * @note If ≤ IE8 make sure you have a polyfill for Date.toISOString()
  * @param [ui-date] {object} Options to pass to $.fn.datepicker() merged onto uiDateConfig
  */
 
 /*global angular, jQuery, module, exports*/
 
 // commonjs package manager support
-if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.exports === exports) {
+if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.exports === exports){
   module.exports = 'ui.date';
 }
 
 (function(angular) {
+
   'use strict';
+
   angular
     .module('ui.date', [])
     .constant('uiDateConfig', {})
     .constant('uiDateFormatConfig', '')
-
+    
     .factory('uiDateConverter', ['uiDateFormatConfig', function(uiDateFormatConfig) {
       return {
         stringToDate: stringToDate,
@@ -27,11 +30,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
         dateFormat = dateFormat || uiDateFormatConfig;
         if (value) {
           if (dateFormat) {
-            try {
-              return jQuery.datepicker.formatDate(dateFormat, value);
-            } catch (formatException) {
-              return undefined;
-            }
+            return jQuery.datepicker.formatDate(dateFormat, value);
           }
 
           if (value.toISOString) {
@@ -41,33 +40,23 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
         return null;
       }
 
-      function stringToDate(dateFormat, valueToParse) {
+      function stringToDate(dateFormat, value) {
         dateFormat = dateFormat || uiDateFormatConfig;
-
-        if (angular.isDate(valueToParse) && !isNaN(valueToParse)) {
-          return valueToParse;
-        }
-
-        if (angular.isString(valueToParse)) {
+        if (angular.isString(value)) {
           if (dateFormat) {
-            return jQuery.datepicker.parseDate(dateFormat, valueToParse);
+            return jQuery.datepicker.parseDate(dateFormat, value);
           }
 
-          var isoDate = new Date(valueToParse);
+          var isoDate = new Date(value);
           return isNaN(isoDate.getTime()) ? null : isoDate;
         }
-
-        if (angular.isNumber(valueToParse)) {
-          // presumably timestamp to date object
-          return new Date(valueToParse);
-        }
-
         return null;
       }
     }])
-
+    
     .directive('uiDate', ['uiDateConfig', 'uiDateConverter', function(uiDateConfig, uiDateConverter) {
-
+      angular.extend({}, uiDateConfig);
+      
       return {
         require: '?ngModel',
         link: function(scope, element, attrs, controller) {
@@ -76,11 +65,11 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
           };
           var initDateWidget = function() {
             var showing = false;
-            var opts = getOptions();
+            var opts    = getOptions();
 
             function setVal() {
-              var keys = ['Hours', 'Minutes', 'Seconds', 'Milliseconds'];
-              var isDate = angular.isDate(controller.$modelValue);
+              var keys     = ['Hours', 'Minutes', 'Seconds', 'Milliseconds'];
+              var isDate   = angular.isDate(controller.$modelValue);
               var preserve = {};
 
               if (isDate && controller.$modelValue.toDateString() === element.datepicker('getDate').toDateString()) {
@@ -127,7 +116,6 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                 showing = false;
                 _onClose(value, picker);
               };
-
               element.off('blur.datepicker').on('blur.datepicker', function() {
                 if (!showing) {
                   scope.$apply(function() {
@@ -137,17 +125,17 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                 }
               });
 
-              controller.$validators.uiDateValidator = function uiDateValidator(modelValue, viewValue) {
-                return angular.isDate(uiDateConverter.stringToDate(attrs.uiDateFormat, viewValue));
-              };
-
-              controller.$parsers.push(function uiDateParser(valueToParse) {
-                return uiDateConverter.stringToDate(attrs.uiDateFormat, valueToParse);
-              });
-
               // Update the date picker when the model changes
               controller.$render = function() {
-                element.datepicker('setDate', controller.$modelValue);
+                var date = controller.$modelValue;
+                if (angular.isDefined(date) && date !== null && !angular.isDate(date)) {
+                  if (angular.isString(controller.$modelValue)) {
+                    date = uiDateConverter.stringToDate(attrs.uiDateFormat, controller.$modelValue);
+                  } else {
+                    throw new Error('ng-Model value must be a Date, or a String object with a date formatter - currently it is a ' + typeof date + ' - use ui-date-format to convert it from a string');
+                  }
+                }
+                element.datepicker('setDate', date);
               };
             }
             // Check if the element already has a datepicker.
@@ -171,13 +159,13 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
               controller.$render();
             }
           };
-
+          
           // Watch for changes to the directives options
           scope.$watch(getOptions, initDateWidget, true);
         }
       };
     }])
-
+    
     .directive('uiDateFormat', ['uiDateConverter', function(uiDateConverter) {
       return {
         require: 'ngModel',
@@ -195,5 +183,5 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
         }
       };
     }]);
-
+    
 })(angular);

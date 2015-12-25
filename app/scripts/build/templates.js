@@ -149,7 +149,7 @@ angular.module('KalturaUsageDashboard').run(['$templateCache', function($templat
     "\n" +
     "\t\t<tbody>\r" +
     "\n" +
-    "\t\t\t<tr ng-repeat='month in months' ng-class='{odd:$index%2==1, even:$index%2==0}'>\r" +
+    "\t\t\t<tr ng-repeat='month in (months | arr_reverse)' ng-class='{odd:$index%2==1, even:$index%2==0}'>\r" +
     "\n" +
     "\t\t\t\t<td ng-repeat='column in columns'>{{month[column.field] | output}}</td>\r" +
     "\n" +
