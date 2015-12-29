@@ -104,7 +104,7 @@ angular.module('KalturaUsageDashboard').run(['$templateCache', function($templat
     "\n" +
     "\t<div class='modal-header'>\r" +
     "\n" +
-    "\t\t<h3 class='modal-title'>{{title || 'Modal'}}</h3>\r" +
+    "\t\t<h3 class='modal-title'>{{ttl || 'Modal'}}</h3>\r" +
     "\n" +
     "\t</div>\r" +
     "\n" +
@@ -244,7 +244,7 @@ angular.module('KalturaUsageDashboard').run(['$templateCache', function($templat
 
 
   $templateCache.put('app/scripts/common/modals/info-modal.html',
-    "<div modal title='data.title || \"Information\"' ok-text='data.okText' cancel-text='data.cancelText' ng-class='data.type'>\r" +
+    "<div modal ttl='data.title || \"Information\"' ok-text='data.okText' cancel-text='data.cancelText' ng-class='data.type'>\r" +
     "\n" +
     "\t<div html-bind-compile='data.message'></div>\r" +
     "\n" +
@@ -536,11 +536,11 @@ angular.module('KalturaUsageDashboard').run(['$templateCache', function($templat
     "\n" +
     "\t<div class='row-fluid title-text'>\r" +
     "\n" +
-    "\t\t<span ng-show='mediaEntriesNumber!=null && playsNumber!=null && !go.isLoading()' class='title-text-inner'>\r" +
+    "\t\t<!-- <span ng-show='mediaEntriesNumber!=null && playsNumber!=null && !go.isLoading()' class='title-text-inner'>\r" +
     "\n" +
     "\t\t\t{{mediaEntriesNumber | output}} media entries played {{playsNumber | output}} times\r" +
     "\n" +
-    "\t\t</span>\r" +
+    "\t\t</span> -->\r" +
     "\n" +
     "\t\t<div csv='plays' dates='dates'></div>\r" +
     "\n" +

@@ -30,7 +30,7 @@
       from = this.$.dates.from;
       to = this.$.dates.to;
       return this.modals.confirm.open({
-        message: "<div>You are going to download <b>" + this.constants.reports[this.$.name].name + "</b> in .csv format.</div>\n<div>Period: <b>" + (this.date(from)) + (from.toYMD() !== to.toYMD() ? ' - ' + this.date(to) : '') + "</b></div>\n<div>Proceed?</div>",
+        message: "<div>You are going to download <b>full usage report</b> in .csv format for <b>" + (this.date(from)) + (from.toYMD() !== to.toYMD() ? ' - ' + this.date(to) : '') + "</b>.</div>\n<div>Proceed?</div>",
         title: 'Export CSV'
       });
     },

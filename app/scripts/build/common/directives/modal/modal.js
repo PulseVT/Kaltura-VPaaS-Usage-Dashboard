@@ -8,7 +8,7 @@
       templateUrl: 'app/scripts/common/directives/modal/modal.html',
       transclude: true,
       scope: {
-        title: '=',
+        ttl: '=',
         okText: '=',
         cancelText: '='
       }
