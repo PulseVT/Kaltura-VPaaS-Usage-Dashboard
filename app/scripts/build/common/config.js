@@ -4,8 +4,6 @@
   return module.config([
     '$urlRouterProvider', '$locationProvider', '$httpProvider', 'RestangularProvider', 'kmcProvider', function($urlRouterProvider, $locationProvider, $httpProvider, RestangularProvider, kmcProvider) {
       var kmc;
-      $locationProvider.html5Mode(true);
-      $locationProvider.hashPrefix('!');
       kmc = kmcProvider.$get();
       RestangularProvider.setBaseUrl(kmc.vars.service_url + "/api_v3/index.php");
       $urlRouterProvider.when('/usage-dashboard', [
