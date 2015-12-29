@@ -10,10 +10,7 @@ do ->
 		'kmcProvider'
 		($urlRouterProvider, $locationProvider, $httpProvider, RestangularProvider, kmcProvider) ->
 			
-			$locationProvider.html5Mode
-				enabled: yes
-				# requireBase: no
-				requireBase: yes
+			$locationProvider.html5Mode yes
 			$locationProvider.hashPrefix '!'
 
 			# $httpProvider.defaults.useXDomain = yes
