@@ -42,7 +42,8 @@
             a = document.createElement('a');
             a.download = _this.$.filename_();
             a.href = response;
-            return a.click();
+            a.click();
+            return null;
           });
         };
       })(this));

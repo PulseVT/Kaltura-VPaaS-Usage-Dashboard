@@ -183,7 +183,7 @@ angular.module('KalturaUsageDashboard').run(['$templateCache', function($templat
     "\n" +
     "\t\t<span class='text'>Dates:</span>\r" +
     "\n" +
-    "\t\t<span kaltura-datepicker='dates.low' disabled='disabled || go.isLoading() || !range.allowDatepickers' max='dates.high'></span>\r" +
+    "\t\t<span kaltura-datepicker='dates.low' disabled='disabled || go.isLoading() || !range.allowDatepickers' max='dates.high' min='minDate'></span>\r" +
     "\n" +
     "\t\t<span kaltura-datepicker='dates.high' disabled='disabled || go.isLoading() || !range.allowDatepickers' min='dates.low'></span>\r" +
     "\n" +

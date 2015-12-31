@@ -62,6 +62,32 @@
             return 'even';
           }
         },
+        dates: {
+          min: function(d1, d2) {
+            if (!((d1 != null) && (d2 != null))) {
+              return;
+            }
+            d1 = new Date(d1);
+            d2 = new Date(d2);
+            if (d1.valueOf() < d2.valueOf()) {
+              return d1;
+            } else {
+              return d2;
+            }
+          },
+          max: function(d1, d2) {
+            if (!((d1 != null) && (d2 != null))) {
+              return;
+            }
+            d1 = new Date(d1);
+            d2 = new Date(d2);
+            if (d1.valueOf() > d2.valueOf()) {
+              return d1;
+            } else {
+              return d2;
+            }
+          }
+        },
         navigator: {
           isMobileOrTablet: function() {
             var check;

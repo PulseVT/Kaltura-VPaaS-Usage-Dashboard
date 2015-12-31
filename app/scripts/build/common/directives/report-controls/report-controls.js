@@ -18,7 +18,7 @@
   return module.classy.controller({
     name: 'ReportControlsCtrl',
     inject: ['$timeout'],
-    injectToScope: ['reportControlsSelectCollection', 'go'],
+    injectToScope: ['reportControlsSelectCollection', 'go', 'partner'],
     init: function() {
       return this._initParams();
     },
@@ -65,10 +65,22 @@
       return this._changed();
     },
     _changed: function() {
-      return this.$timeout((function(_this) {
+      this.$timeout((function(_this) {
         return function() {
           var base;
           return typeof (base = _this.$).changed === "function" ? base.changed() : void 0;
+        };
+      })(this));
+      if (this.$.range.allowDatepickers) {
+        return this._calcMinDate();
+      }
+    },
+    _calcMinDate: function() {
+      return this.partner.fetch().then((function(_this) {
+        return function() {
+          var date;
+          date = new Date(parseInt(_this.partner.info.createdAt) * 1000);
+          return _this.$.minDate = date.toMonthStart();
         };
       })(this));
     },

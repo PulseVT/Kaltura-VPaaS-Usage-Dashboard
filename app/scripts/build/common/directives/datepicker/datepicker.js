@@ -23,8 +23,7 @@
       this.input = this.$element.find('input');
       this.$.options = {
         changeYear: true,
-        changeMonth: true,
-        yearRange: '2000:-0'
+        changeMonth: true
       };
       if (!this.$.name) {
         this.$.name = 'datepicker';
