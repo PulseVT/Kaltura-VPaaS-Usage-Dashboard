@@ -16,7 +16,8 @@
           var href, regex;
           href = $state.href(name);
           regex = new RegExp("^" + (angular.element('base').attr('href')));
-          return href.replace(regex, '');
+          href = href.replace(regex, '');
+          return href = href.replace(/^\#(\/|\\)/, '');
         },
         path: (function(_this) {
           return function() {
