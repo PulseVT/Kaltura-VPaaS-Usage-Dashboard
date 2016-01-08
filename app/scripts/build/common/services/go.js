@@ -27,7 +27,7 @@
               case 1:
                 item = arguments[0];
                 target = _this.stateHref(item.name);
-                return $location.path(targetpg);
+                return $location.path(target);
             }
           };
         })(this),

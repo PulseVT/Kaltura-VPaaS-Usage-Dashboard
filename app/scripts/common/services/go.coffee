@@ -22,7 +22,7 @@ do ->
 						when 1
 							item = arguments[0]
 							target = @stateHref item.name
-							$location.path targetpg
+							$location.path target
 
 				$state: $state
 
