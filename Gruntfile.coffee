@@ -140,6 +140,9 @@ module.exports = (grunt) ->
 					cwd: '.'
 					src: config.image_files
 					dest: '<%= config.dist %>'
+				,
+					src: '.htaccess',
+					dest: '<%= config.dist %>/.htaccess'
 				]
 
 		ngtemplates:
@@ -152,12 +155,13 @@ module.exports = (grunt) ->
 		compress:
 			production:
 				options:
-					archive: '<%= config.packages %>/<%= bower.version %>.zip'
+					archive: '<%= config.packages %>/kaltura-usage-dashboard-v<%= bower.version %>.zip'
 				files: [
 					expand: yes
 					cwd: '<%= config.dist %>'
 					src: ['**']
-					dest: '<%= bower.name %>'
+					dot: yes
+					dest: 'v<%= bower.version %>'
 				]
 
 		karma:

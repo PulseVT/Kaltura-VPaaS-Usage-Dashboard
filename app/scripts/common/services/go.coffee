@@ -11,13 +11,18 @@ do ->
 
 				go: (name) -> $state.transitionTo name, {}, inherit: yes
 
+				stateHref: (name) ->
+					href = $state.href name
+					regex = new RegExp "^#{angular.element('base').attr('href')}"
+					href.replace regex, ''
+
 				path: =>
 					switch arguments.length
 						when 0 then @$location.path
 						when 1
 							item = arguments[0]
-							target = $state.href item.name
-							$location.path target.replace '#/', ''
+							target = @stateHref item.name
+							$location.path target
 
 				$state: $state
 
