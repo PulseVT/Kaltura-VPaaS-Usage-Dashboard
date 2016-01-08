@@ -84,6 +84,13 @@
           csvHeader: 'plays'
         }
       ],
+      'end-users': [
+        {
+          title: 'Total',
+          field: 'total_end_users',
+          csvHeader: 'plays'
+        }
+      ],
       'overall-usage': [
         {
           title: 'Plays (CPM)',
@@ -104,6 +111,10 @@
         }, {
           title: 'Media Entries',
           field: 'total_media_entries',
+          csvHeader: 'plays'
+        }, {
+          title: 'End Users',
+          field: 'total_end_users',
           csvHeader: 'plays'
         }
       ]

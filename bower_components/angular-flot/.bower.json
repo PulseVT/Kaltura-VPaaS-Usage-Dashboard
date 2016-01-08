@@ -15,6 +15,6 @@
     "commit": "a58488adfbe8832d906ea721c848375a2f0662f9"
   },
   "_source": "git://github.com/develersrl/angular-flot.git",
-  "_target": "~0.0.13",
+  "_target": "=0.0.15",
   "_originalSource": "angular-flot"
 }

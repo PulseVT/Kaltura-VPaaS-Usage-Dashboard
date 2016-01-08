@@ -29,6 +29,6 @@
     "commit": "8e609086cac3f4cec2d954b1b66cc31c8c970262"
   },
   "_source": "git://github.com/angular-ui/ui-date.git",
-  "_target": "0.0.10",
+  "_target": "=0.0.10",
   "_originalSource": "angular-ui-date"
 }

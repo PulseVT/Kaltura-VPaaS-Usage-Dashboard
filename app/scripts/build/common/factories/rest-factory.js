@@ -2,7 +2,7 @@
   var module;
   module = angular.module('KalturaUsageDashboard.factories.rest', []);
   return module.factory('RestFactory', [
-    'Restangular', 'Collection', 'x2js', 'go', 'kmc', 'utils', '$filter', 'errorsHandler', function(Restangular, Collection, x2js, go, kmc, utils, $filter, errorsHandler) {
+    'Restangular', 'Collection', 'go', 'kmc', 'utils', '$filter', 'errorsHandler', function(Restangular, Collection, go, kmc, utils, $filter, errorsHandler) {
       return function(config) {
         _.defaults(config, {
           dontCollect: true,
@@ -201,12 +201,9 @@
             });
           }
         });
-        this.addFetchInterceptor(function(response) {
-          return x2js.xml_str2json(response).xml.result;
-        });
         this.addFetchInterceptor((function(_this) {
           return function(parsed, payload) {
-            if (parsed.error != null) {
+            if ((parsed.error != null) || parsed.objectType === 'KalturaAPIException') {
               _this.cancelAllRequests(parsed);
               errorsHandler(parsed);
               return {};

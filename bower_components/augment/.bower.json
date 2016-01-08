@@ -33,6 +33,6 @@
     "commit": "34acd7611b0e1aaab274041d8b36e14e2ac70989"
   },
   "_source": "git://github.com/javascript/augment.git",
-  "_target": "~4.3.0",
+  "_target": "=4.3.0",
   "_originalSource": "augment"
 }

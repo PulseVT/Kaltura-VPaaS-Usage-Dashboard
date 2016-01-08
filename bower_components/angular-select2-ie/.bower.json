@@ -25,6 +25,6 @@
     "commit": "c70d15e28439d624e150622a756c40abb725d5bc"
   },
   "_source": "git://github.com/PulseVT/angular-select2.git",
-  "_target": ">=2.0.0",
+  "_target": "=2.0.0",
   "_originalSource": "angular-select2-ie"
 }

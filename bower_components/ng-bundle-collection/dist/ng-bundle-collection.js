@@ -825,15 +825,11 @@ Collection = (function() {
    */
 
   Collection.prototype.__wrapWithModel = function(item) {
-    if (_.isFunction(this.config.model)) {
-      return new this.config.model(item, {
-        update: this.update,
-        "delete": this["delete"],
-        remove: this.remove
-      });
-    } else {
-      return item;
-    }
+    return new this.config.model(item, {
+      update: this.update,
+      "delete": this["delete"],
+      remove: this.remove
+    });
   };
 
 
@@ -1559,7 +1555,7 @@ Collection = (function() {
     if (_params == null) {
       _params = {};
     }
-    params = angular.copy(this.config.params || {});
+    params = angular.copy(this.config.params);
     _.extend(params, _params);
     id = params[this.config.id_field];
     if (this.objById[id] != null) {

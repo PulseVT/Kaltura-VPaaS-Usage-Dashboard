@@ -279,6 +279,31 @@ angular.module('KalturaUsageDashboard').run(['$templateCache', function($templat
   );
 
 
+  $templateCache.put('app/scripts/pages/usage-dashboard/end-users-report/end-users-report.html',
+    "<div class='main-content container-fluid span10' id='end-users-report'>\r" +
+    "\n" +
+    "\t<div report-controls from='dates.from' to='dates.to' changed='fetch()'></div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "\t<div class='row-fluid title-text'>\r" +
+    "\n" +
+    "\t\t<div csv='end-users' dates='dates'></div>\r" +
+    "\n" +
+    "\t</div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "\t<div graph='months' decorate='\"months\"' y-label='End Users Total' value-field='total_end_users'></div>\r" +
+    "\n" +
+    "\t\r" +
+    "\n" +
+    "\t<div monthly-breakdown='end-users' months='months' cls='half-width'></div>\r" +
+    "\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('app/scripts/pages/usage-dashboard/media-entries-report/media-entries-report.html',
     "<div class='main-content container-fluid span10' id='media-entries-report'>\r" +
     "\n" +

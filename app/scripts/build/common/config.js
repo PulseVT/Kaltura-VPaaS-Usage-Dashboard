@@ -6,6 +6,11 @@
       var kmc;
       kmc = kmcProvider.$get();
       RestangularProvider.setBaseUrl(kmc.vars.service_url + "/api_v3/index.php");
+      RestangularProvider.setJsonp(true);
+      RestangularProvider.setDefaultRequestParams('jsonp', {
+        callback: 'JSON_CALLBACK',
+        format: 9
+      });
       $urlRouterProvider.when('/usage-dashboard', [
         'redirector', function(redirector) {
           return redirector('usage-dashboard.overall-usage');

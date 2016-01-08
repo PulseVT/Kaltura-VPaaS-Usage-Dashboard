@@ -5,14 +5,14 @@
     'modals', function(modals) {
       return function(error) {
         var message;
+        error = (error != null ? error.error : void 0) || error;
         message = (function() {
-          var ref;
-          if ((error != null ? (ref = error.error) != null ? ref.code : void 0 : void 0) != null) {
-            switch (error.error.code) {
+          if ((error != null ? error.code : void 0) != null) {
+            switch (error.code) {
               case 'INVALID_KS':
                 return "Your session has expired. Please refresh the page to continue.";
               default:
-                return error.error.message;
+                return error.message;
             }
           } else {
             return "Unable to load the requested information";

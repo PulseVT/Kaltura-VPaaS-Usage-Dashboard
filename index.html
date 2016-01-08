@@ -6,10 +6,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="title" content="Kaltura - Open Source Video Platform">
 	<meta name="robots" content="index, follow">
-	<meta name="description" content="Kaltura Management Console. Media Asset Management System. Video solutions for video streaming and video management. Kaltura - The Open Source Video Platform.">
-	<meta name="keywords" content="production, shows, talent, discover, contribute, share, enhance, first open source video platform, video editing, media collaboration, online video, movie, wikimentaries, wiki">
 	<meta name="language" content="en">
-	<meta name="verify-v1" content="JIjZEB+ZCdDyAw49II0fIpcLfFc40M9EzXEY5/Tva68=">
 
 	<title>KMC &gt; Usage Dashboard &gt; {{go.current().data.pageTitle}}</title>
 
@@ -22,7 +19,7 @@
 	<link href="bower_components/select2/select2.css" rel="stylesheet" type="text/css">
 	<link href="bower_components/angular-spinkit/build/angular-spinkit.min.css" rel="stylesheet" type="text/css">
 	<link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-	<link href="app/styles/kaltura-vpaas-usage-dashboard.css" rel="stylesheet" type="text/css">
+	<link href="app/styles/kaltura-usage-dashboard.css" rel="stylesheet" type="text/css">
 	<!-- /include -->
 </head>
 
@@ -33,6 +30,8 @@
 	<div ui-view='main'></div>
 
 	<!--[if lte IE 9]>
+		<script src="//cdn.rawgit.com/jpillora/xdomain/0.7.3/dist/xdomain.min.js" slave="http://example.org/proxy.html"></script>
+		
 		<script>
 			navigator.isIE9orLess = true;
 		</script>
@@ -92,11 +91,8 @@
 	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 	<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
 	<script src="bower_components/ng-bundle-collection/dist/ng-bundle-collection.js"></script>
-	<script src="bower_components/x2js/xml2json.min.js"></script>
-	<script src="bower_components/angular-x2js/dist/x2js.min.js"></script>
 	<script src="bower_components/angular-spinkit/build/angular-spinkit.js"></script>
 	<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-	<script src="bower_components/ng-csv/build/ng-csv.min.js"></script>
 	<script src="bower_components/flot-axislabels/jquery.flot.axislabels.js"></script>
 	<script src="app/assets/angular-classy/angular-classy.js"></script>
 	<script src="app/scripts/build/app.js"></script>
@@ -128,12 +124,12 @@
 	<script src="app/scripts/build/common/modals/warning-modal.js"></script>
 	<script src="app/scripts/build/common/rest.js"></script>
 	<script src="app/scripts/build/common/rest/bandwidth-report-rest.js"></script>
+	<script src="app/scripts/build/common/rest/end-users-rest.js"></script>
 	<script src="app/scripts/build/common/rest/media-entries-rest.js"></script>
 	<script src="app/scripts/build/common/rest/partner-rest.js"></script>
 	<script src="app/scripts/build/common/rest/plays-report-rest.js"></script>
 	<script src="app/scripts/build/common/rest/storage-report-rest.js"></script>
 	<script src="app/scripts/build/common/rest/transcoding-consumption-rest.js"></script>
-	<script src="app/scripts/build/common/rest/users-rest.js"></script>
 	<script src="app/scripts/build/common/rest/vpaas-usage-report-rest.js"></script>
 	<script src="app/scripts/build/common/run.js"></script>
 	<script src="app/scripts/build/common/services/errors-handler.js"></script>
@@ -142,6 +138,7 @@
 	<script src="app/scripts/build/common/services/redirector.js"></script>
 	<script src="app/scripts/build/common/utils.js"></script>
 	<script src="app/scripts/build/pages/usage-dashboard/bandwidth-report/bandwidth-report.js"></script>
+	<script src="app/scripts/build/pages/usage-dashboard/end-users-report/end-users-report.js"></script>
 	<script src="app/scripts/build/pages/usage-dashboard/media-entries-report/media-entries-report.js"></script>
 	<script src="app/scripts/build/pages/usage-dashboard/overall-usage-report/overall-usage-report.js"></script>
 	<script src="app/scripts/build/pages/usage-dashboard/plays-report/plays-report.js"></script>

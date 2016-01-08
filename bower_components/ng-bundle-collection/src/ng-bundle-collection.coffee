@@ -428,13 +428,10 @@ class Collection
 	# Item to be wrapped.
 	###
 	__wrapWithModel: (item) =>
-		if _.isFunction @config.model
-			new @config.model item,
-				update: @update
-				delete: @delete
-				remove: @remove
-		else
-			item
+		new @config.model item,
+			update: @update
+			delete: @delete
+			remove: @remove
 
 
 	###*
@@ -1011,7 +1008,7 @@ class Collection
 	###
 	fetch: (_params = {}, subconfig) =>
 		# preventing params mixing if the same params object is passed to different collections
-		params = angular.copy @config.params or {}
+		params = angular.copy @config.params
 		# extending default preconfigured params with custom, passed to this function
 		_.extend params, _params
 

@@ -12,6 +12,12 @@
             inherit: true
           });
         },
+        stateHref: function(name) {
+          var href, regex;
+          href = $state.href(name);
+          regex = new RegExp("^" + (angular.element('base').attr('href')));
+          return href.replace(regex, '');
+        },
         path: (function(_this) {
           return function() {
             var item, target;
@@ -20,8 +26,8 @@
                 return _this.$location.path;
               case 1:
                 item = arguments[0];
-                target = $state.href(item.name);
-                return $location.path(target.replace('#/', ''));
+                target = _this.stateHref(item.name);
+                return $location.path(targetpg);
             }
           };
         })(this),
