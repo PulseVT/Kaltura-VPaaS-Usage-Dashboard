@@ -279,8 +279,8 @@
         },
         dg: function(date) {
           var v1, v2;
-          v1 = this.valueOf() / dayms;
-          v2 = (new Date(date)).valueOf() / dayms;
+          v1 = parseInt(this.valueOf() / dayms);
+          v2 = parseInt((new Date(date)).valueOf() / dayms);
           return v1 > v2;
         },
         ds: function(date) {
@@ -288,8 +288,8 @@
         },
         dge: function(date) {
           var v1, v2;
-          v1 = this.valueOf() / dayms;
-          v2 = (new Date(date)).valueOf() / dayms;
+          v1 = parseInt(this.valueOf() / dayms);
+          v2 = parseInt((new Date(date)).valueOf() / dayms);
           return v1 >= v2;
         },
         dse: function(date) {
@@ -297,8 +297,8 @@
         },
         de: function(date) {
           var v1, v2;
-          v1 = this.valueOf() / dayms;
-          v2 = (new Date(date)).valueOf() / dayms;
+          v1 = parseInt(this.valueOf() / dayms);
+          v2 = parseInt((new Date(date)).valueOf() / dayms);
           return v1 === v2;
         },
         dg_ms: function(date) {

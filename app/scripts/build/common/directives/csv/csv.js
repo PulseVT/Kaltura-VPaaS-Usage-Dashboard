@@ -38,12 +38,7 @@
       return this._modal().result.then((function(_this) {
         return function() {
           return _this.vpaasUsageReport.fetch(_this.utils.csv.extractPayload(_this.$.dates, _this.$.name)).then(function(response) {
-            var a;
-            a = document.createElement('a');
-            a.download = _this.$.filename_();
-            a.href = response;
-            a.click();
-            return null;
+            return window.location.replace(response);
           });
         };
       })(this));

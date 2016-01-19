@@ -48,10 +48,16 @@
       }
     },
     _flushMin: function() {
-      return this.input.datepicker('option', 'minDate', this.$.min);
+      var base, min, today;
+      today = new Date;
+      min = (this.$.min == null) || (typeof (base = this.$.min).dg === "function" ? base.dg(today) : void 0) ? today : this.$.min;
+      return this.input.datepicker('option', 'minDate', min);
     },
     _flushMax: function() {
-      return this.input.datepicker('option', 'maxDate', this.$.max);
+      var base, max, today;
+      today = new Date;
+      max = (this.$.max == null) || (typeof (base = this.$.max).dg === "function" ? base.dg(today) : void 0) ? today : this.$.max;
+      return this.input.datepicker('option', 'maxDate', max);
     },
     open: function() {
       this.input.datepicker('show');
