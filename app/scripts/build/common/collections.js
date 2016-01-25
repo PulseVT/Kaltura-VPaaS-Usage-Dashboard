@@ -33,10 +33,10 @@
           "default": true,
           dates: {
             low: function() {
-              return new Date((new Date).subMonth(3).setDate(1));
+              return new Date((new Date).subMonth(2).setDate(1));
             },
             high: function() {
-              return new Date((new Date).setDate(0));
+              return new Date(new Date);
             }
           }
         }, {

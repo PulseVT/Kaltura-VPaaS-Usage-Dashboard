@@ -340,7 +340,7 @@ angular.module('KalturaUsageDashboard').run(['$templateCache', function($templat
     "\n" +
     "\t\t\tMonth to Date Usage Summary\r" +
     "\n" +
-    "\t\t\t<div csv='overall-usage' dates='currentMonthDates'></div>\r" +
+    "\t\t\t<div csv='overall-usage' dates='lastThreeMonthsDates'></div>\r" +
     "\n" +
     "\t\t</div>\r" +
     "\n" +
